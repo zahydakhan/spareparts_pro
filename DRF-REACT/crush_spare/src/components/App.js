@@ -5,6 +5,9 @@ import { ThemeProvider } from "@material-ui/styles";
 import theme from "./ui/Theme";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LandingPage from "./LandingPage";
+import Register from "./login/register";
+import Login from "./login/login";
+import Logout from "./login/logout";
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -155,6 +158,9 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
               </div>
             )}
           />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/logout" component={Logout} />
         </Switch>
         <Footer
           value={value}

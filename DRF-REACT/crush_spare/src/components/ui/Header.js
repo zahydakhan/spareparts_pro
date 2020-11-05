@@ -29,6 +29,9 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
+import { NavLink } from "react-router-dom";
+import Link1 from "@material-ui/core/Link";
+
 function ElevationScroll(props) {
   const { children } = props;
 
@@ -129,6 +132,9 @@ const useStyles = makeStyles((theme) => ({
   },
   appbar: {
     zIndex: theme.zIndex.modal + 1,
+  },
+  link: {
+    margin: theme.spacing(1, 1.5),
   },
 }));
 
@@ -253,12 +259,21 @@ export default function Header(props) {
           />
         ))}
       </Tabs>
+      <Link1
+        color="textPrimary"
+        href="#"
+        className={classes.link}
+        component={NavLink}
+        to="/register"
+      >
+        Register
+      </Link1>
       <Button
         variant="contained"
         color="secondary"
         className={classes.button}
         component={Link}
-        to="/book"
+        to="/login"
       >
         Login
       </Button>

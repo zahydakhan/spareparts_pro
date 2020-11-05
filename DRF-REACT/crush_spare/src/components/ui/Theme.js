@@ -5,6 +5,7 @@ const robGreen = "#00A94F";
 const robWhite = "#FFFFFF";
 const robLightGrey = "#f8f9fa";
 const robDarkGrey = "#F1F0F0";
+const robYellow = "#FFDE00";
 
 export default createMuiTheme({
   palette: {
@@ -14,6 +15,7 @@ export default createMuiTheme({
       grey: robLightGrey,
       darkGrey: robDarkGrey,
       green: robGreen,
+      yellow: robYellow,
     },
     primary: {
       main: robWhite,
