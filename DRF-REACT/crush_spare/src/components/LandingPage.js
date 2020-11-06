@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SparepartsTable from "./SparepartsTable1";
 import SparepartsLoadingComponent from "./ui/SparepartsLoading";
+import axiosInstance from "../axios";
 
 const rows = [];
 const columns = [];
@@ -15,23 +16,20 @@ function LandingPage() {
   const [rows, setRows] = React.useState([]);
 
   useEffect(() => {
-    setAppState({ loading: true });
-    const apiUrl = `http://127.0.0.1:8000/parts/spare/`;
-    fetch(apiUrl)
-      .then((data) => data.json())
-      .then((response) => {
-        setAppState({ loading: false, posts: response });
-        console.log(response);
-        if (searchResult) {
-          const filteredData = response.filter((cty) =>
-            cty.part_number.includes(searchResult)
-          );
-          console.log(filteredData);
-          setRows(filteredData);
-        } else {
-          setRows(response);
-        }
-      });
+    axiosInstance.get("parts/spare/").then((res) => {
+      const tableData = res.data;
+      setAppState({ loading: false, posts: tableData });
+      console.log(res.data);
+      if (searchResult) {
+        const filteredData = tableData.filter((cty) =>
+          cty.part_number.includes(searchResult)
+        );
+        console.log(filteredData);
+        setRows(filteredData);
+      } else {
+        setRows(tableData);
+      }
+    });
   }, [setAppState, searchResult]);
   return (
     <div className="App">

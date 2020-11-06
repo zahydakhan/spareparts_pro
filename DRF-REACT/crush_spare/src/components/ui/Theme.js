@@ -18,7 +18,7 @@ export default createMuiTheme({
       yellow: robYellow,
     },
     primary: {
-      main: robWhite,
+      main: robGreen,
     },
     secondary: {
       main: robGreen,

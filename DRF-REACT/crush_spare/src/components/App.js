@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "../components/ui/Header";
 import Footer from "../components/ui/Footer";
 import { ThemeProvider } from "@material-ui/styles";
@@ -12,6 +12,7 @@ import Logout from "./login/logout";
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [value, setValue] = useState(0);
+
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>

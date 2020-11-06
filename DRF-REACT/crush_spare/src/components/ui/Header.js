@@ -32,6 +32,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { NavLink } from "react-router-dom";
 import Link1 from "@material-ui/core/Link";
 
+import { useLocalState } from "../../hooks";
+
 function ElevationScroll(props) {
   const { children } = props;
 
@@ -156,6 +158,8 @@ export default function Header(props) {
   const setSelectedIndex = props.setSelectedIndex;
   const selectedIndex = props.selectedIndex;
 
+  const [loggedIn, setLoggedIn] = useLocalState("login");
+
   const handleChange = (e, newvalue) => {
     setValue(newvalue);
   };
@@ -268,15 +272,28 @@ export default function Header(props) {
       >
         Register
       </Link1>
-      <Button
-        variant="contained"
-        color="secondary"
-        className={classes.button}
-        component={Link}
-        to="/login"
-      >
-        Login
-      </Button>
+      {localStorage.getItem("login") === "true" ? (
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+          component={Link}
+          to="/logout"
+          onClick={() => setLoggedIn(false)}
+        >
+          Logout
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+          component={Link}
+          to="/login"
+        >
+          Login
+        </Button>
+      )}
     </React.Fragment>
   );
 

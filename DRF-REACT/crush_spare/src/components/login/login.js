@@ -14,6 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
+import { useLocalState } from "../../hooks";
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -31,10 +33,11 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: theme.palette.common.yellow,
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
   const history = useHistory();
   const initialFormData = Object.freeze({
     email: "",
@@ -42,6 +45,7 @@ export default function SignIn() {
   });
 
   const [formData, updateFormData] = useState(initialFormData);
+  const [loggedIn, setLoggedIn] = useLocalState("login");
 
   const handleChange = (e) => {
     updateFormData({
@@ -52,7 +56,9 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     console.log(formData);
+    console.log(loggedIn);
 
     axiosInstance
       .post(`token/`, {
@@ -65,7 +71,8 @@ export default function SignIn() {
         axiosInstance.defaults.headers["Authorization"] =
           "JWT " + localStorage.getItem("access_token");
         history.push("/");
-        //console.log(res);
+        setLoggedIn(true);
+        console.log(res);
         //console.log(res.data);
       });
   };
