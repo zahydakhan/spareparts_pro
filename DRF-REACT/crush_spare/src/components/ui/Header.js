@@ -33,6 +33,9 @@ import { NavLink } from "react-router-dom";
 import Link1 from "@material-ui/core/Link";
 
 import { useLocalState } from "../../hooks";
+import CartIcon from "../cart-icon/cart-icon.component";
+import CartDropdown from "../cart-dropdown/cart-dropdown.component";
+import { connect } from "react-redux";
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -140,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header(props) {
+function Header(props) {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -294,6 +297,9 @@ export default function Header(props) {
           Login
         </Button>
       )}
+      <Link to="/cart">
+        <CartIcon noOfOrders={props.noOfOrders} />
+      </Link>
     </React.Fragment>
   );
 
@@ -405,7 +411,14 @@ export default function Header(props) {
           </Toolbar>
         </AppBar>
       </ElevationScroll>
+      {props.hidden ? null : <CartDropdown />}
       <div className={classes.toolbarMargin} />
     </React.Fragment>
   );
 }
+
+const mapStateToProps = ({ cart: { hidden } }) => ({
+  hidden,
+});
+
+export default connect(mapStateToProps)(Header);

@@ -6,7 +6,7 @@ import axiosInstance from "../axios";
 const rows = [];
 const columns = [];
 
-function LandingPage() {
+function LandingPage(props) {
   const SpareLoading = SparepartsLoadingComponent(SparepartsTable);
   const [appState, setAppState] = useState({
     loading: false,
@@ -41,6 +41,8 @@ function LandingPage() {
         className="table__search"
       />
       <SpareLoading
+        cart={props.cart}
+        setCart={props.setCart}
         columns={columns}
         rows={rows}
         isLoading={appState.loading}

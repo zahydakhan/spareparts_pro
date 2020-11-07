@@ -20,6 +20,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import Button from "@material-ui/core/Button";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -91,6 +92,12 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "Model Number",
+  },
+  {
+    id: "add",
+    numeric: true,
+    disablePadding: false,
+    label: "Add to Order",
   },
 ];
 
@@ -190,7 +197,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable({ rows }) {
+export default function EnhancedTable({ rows, cart, setCart }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -198,6 +205,7 @@ export default function EnhancedTable({ rows }) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [addQuantity, setAddQuantity] = React.useState(0);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -216,6 +224,16 @@ export default function EnhancedTable({ rows }) {
 
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
+  };
+
+  const handleSubmit = (row) => (event) => {
+    event.preventDefault();
+    console.log(event.target[0].value);
+
+    console.log(row);
+    row.quantity = event.target[0].value;
+    setCart([...cart, row]);
+    console.log(row);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -254,7 +272,7 @@ export default function EnhancedTable({ rows }) {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell className={classes.tableFont}>
@@ -283,6 +301,17 @@ export default function EnhancedTable({ rows }) {
                       </TableCell>
                       <TableCell className={classes.tableFont}>
                         {row.model_number}
+                      </TableCell>
+                      <TableCell className={classes.tableFont}>
+                        <form onSubmit={handleSubmit(row)}>
+                          <input
+                            type="number"
+                            placeholder={addQuantity}
+                            onChange={(e) => setAddQuantity(e.target.value)}
+                            value={addQuantity}
+                          />
+                          <Button type="submit">Add to Cart</Button>
+                        </form>
                       </TableCell>
                     </TableRow>
                   );

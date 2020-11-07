@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 class SparePartList(generics.ListCreateAPIView):
     queryset = SpareParts.objects.all()
     serializer_class = SparePartsSerializer
+    permission_classes = [IsAuthenticated]
 
 class SparePartRetrieve(generics.RetrieveUpdateDestroyAPIView):
     queryset = SpareParts.objects.all()

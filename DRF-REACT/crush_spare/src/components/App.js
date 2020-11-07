@@ -8,10 +8,14 @@ import LandingPage from "./LandingPage";
 import Register from "./login/register";
 import Login from "./login/login";
 import Logout from "./login/logout";
+import CartPage from "./cart-page/cart-page.component";
+import { useLocalStateCart } from "../hooks";
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  //const [cartItems, setCartItems] = useState([]);
   const [value, setValue] = useState(0);
+  const [cart, setCart] = useLocalStateCart("cart");
 
   return (
     <ThemeProvider theme={theme}>
@@ -21,9 +25,14 @@ function App() {
           setValue={setValue}
           selectedIndex={selectedIndex}
           setSelectedIndex={setSelectedIndex}
+          noOfOrders={cart.length ? cart.length : 0}
         />
         <Switch>
-          <Route exact path="/" component={LandingPage} />
+          <Route
+            exact
+            path="/"
+            render={() => <LandingPage cart={cart} setCart={setCart} />}
+          />
           <Route
             exact
             path="/roller"
@@ -162,6 +171,11 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/logout" component={Logout} />
+          <Route
+            exact
+            path="/cart"
+            render={() => <CartPage cart={cart} setCart={setCart} />}
+          />
         </Switch>
         <Footer
           value={value}
