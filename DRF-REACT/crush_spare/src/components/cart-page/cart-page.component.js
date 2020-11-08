@@ -7,55 +7,76 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import { Grid, Typography } from "@material-ui/core";
+import { useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
+  deleteButton: {
+    backgroundColor: "#e63946",
+    color: "#FFFFFF",
+  },
+  tableContainer: {
+    marginTop: "2em",
+  },
+  title: {
+    fontSize: "2em",
+  },
 });
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
-export default function BasicTable({ cart, setCartItems }) {
+export default function BasicTable({ cart, setCart }) {
   const classes = useStyles();
+  const theme = useTheme();
   console.log(cart);
 
+  const removeFromCart = (productToRemove) => {
+    setCart(cart.filter((product) => product !== product));
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {cart.map((cartItem) => (
-            <TableRow key={cartItem.id}>
-              <TableCell component="th" scope="row">
-                {cartItem.part_number}
-              </TableCell>
-              <TableCell align="right">{cartItem.description}</TableCell>
-              <TableCell align="right">{cartItem.vendor_name}</TableCell>
-              <TableCell align="right">{cartItem.price}</TableCell>
-              <TableCell align="right">{cartItem.protein}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Grid container justify="center" className={classes.tableContainer}>
+      <Grid item>
+        <Typography className={classes.title} variant="h2">
+          Check Out
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Part Number</TableCell>
+                <TableCell align="center">Description</TableCell>
+                <TableCell align="center">Vendor Name</TableCell>
+                <TableCell align="center">Price AUD</TableCell>
+                <TableCell align="center">Quantity</TableCell>
+                <TableCell align="center">Delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {cart.map((cartItem) => (
+                <TableRow key={cartItem.id}>
+                  <TableCell align="center">{cartItem.part_number}</TableCell>
+                  <TableCell align="center">{cartItem.description}</TableCell>
+                  <TableCell align="center">{cartItem.vendor_name}</TableCell>
+                  <TableCell align="center">{cartItem.aud}</TableCell>
+                  <TableCell align="center">{cartItem.quantity}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      className={classes.deleteButton}
+                      onClick={() => removeFromCart(cartItem)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
   );
 }
