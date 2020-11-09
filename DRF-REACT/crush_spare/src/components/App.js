@@ -10,6 +10,7 @@ import Login from "./login/login";
 import Logout from "./login/logout";
 import CartPage from "./cart-page/cart-page.component";
 import { useLocalStateCart } from "../hooks";
+import Example from "./cart-page/print-pdf.component";
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -33,6 +34,12 @@ function App() {
             path="/"
             render={() => <LandingPage cart={cart} setCart={setCart} />}
           />
+          <Route
+            exact
+            path="/pdf"
+            render={() => <Example cart={cart} setCart={setCart} />}
+          />
+
           <Route
             exact
             path="/roller"
@@ -177,6 +184,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
             render={() => <CartPage cart={cart} setCart={setCart} />}
           />
         </Switch>
+
         <Footer
           value={value}
           setValue={setValue}

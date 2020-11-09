@@ -4,7 +4,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/styles";
-import logo from "../../assets/boral-logo.jpg";
+import logo from "../../assets/boral-logo.png";
 
 // importing tabs & button
 import Tabs from "@material-ui/core/Tabs";
@@ -82,11 +82,19 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 10,
     marginLeft: "25px",
   },
+  link: {
+    ...theme.typography.tab,
+    minWidth: 10,
+    marginLeft: "25px",
+    color: "#FFF",
+    opacity: 0.7,
+  },
   button: {
     ...theme.typography.demo,
     marginLeft: "20px",
     marginRight: "20px",
     height: "45px",
+    backgroundColor: theme.palette.common.yellow,
   },
   logoContainer: {
     padding: 0,
@@ -138,9 +146,6 @@ const useStyles = makeStyles((theme) => ({
   appbar: {
     zIndex: theme.zIndex.modal + 1,
   },
-  link: {
-    margin: theme.spacing(1, 1.5),
-  },
 }));
 
 function Header(props) {
@@ -188,44 +193,38 @@ function Header(props) {
 
   const menuOptions = [
     {
-      name: "Add spareparts",
+      name: "Edit Quary Data",
       link: "/solutions",
       activeIndex: 1,
       selectedIndex: 0,
     },
     {
-      name: "Edit/Delete Spareparts",
+      name: "Edit Spare Parts",
       link: "/spendanalytics",
       activeIndex: 1,
       selectedIndex: 1,
     },
     {
-      name: "Saving Tracker",
+      name: "Edit Roller Spare Parts",
       link: "/saving",
       activeIndex: 1,
       selectedIndex: 2,
     },
-    {
-      name: "Analytics as s Service",
-      link: "/analytics",
-      activeIndex: 1,
-      selectedIndex: 3,
-    },
   ];
 
   const routes = [
-    { name: "Home", link: "/", activeIndex: 0 },
+    { name: "Spare Parts List", link: "/", activeIndex: 0 },
     {
-      name: "Roller",
-      link: "/roller",
+      name: "Edit Quary Data",
+      link: "/editquary",
       activeIndex: 1,
       ariaOwns: anchorEl ? "simple-menu" : undefined,
       ariaPopup: anchorEl ? "true" : undefined,
       mouseOver: (event) => handleClick(event),
     },
-    { name: "Add Spareparts", link: "/addspare", activeIndex: 2 },
-    { name: "Add User", link: "/company", activeIndex: 3 },
-    { name: "Cart", link: "/contact", activeIndex: 4 },
+    { name: "Upload Data", link: "/addspare", activeIndex: 2 },
+    { name: "Quary List", link: "/company", activeIndex: 3 },
+    { name: "Roller Spare List", link: "/roller", activeIndex: 4 },
   ];
 
   useEffect(() => {
@@ -267,6 +266,7 @@ function Header(props) {
         ))}
       </Tabs>
       <Link1
+        underline="none"
         color="textPrimary"
         href="#"
         className={classes.link}
@@ -278,7 +278,6 @@ function Header(props) {
       {localStorage.getItem("login") === "true" ? (
         <Button
           variant="contained"
-          color="secondary"
           className={classes.button}
           component={Link}
           to="/logout"
@@ -289,7 +288,6 @@ function Header(props) {
       ) : (
         <Button
           variant="contained"
-          color="secondary"
           className={classes.button}
           component={Link}
           to="/login"
@@ -336,6 +334,21 @@ function Header(props) {
           ))}
 
           <ListItem
+            divider
+            button
+            component={Link}
+            to=""
+            classes={{ selected: classes.drawerItemSelected }}
+            onClick={() => {
+              setOpenDrawer(false);
+            }}
+          >
+            <ListItemText className={classes.drawerItem} disableTypography>
+              Register
+            </ListItemText>
+          </ListItem>
+
+          <ListItem
             onClick={() => {
               setOpenDrawer(false);
               setValue(5);
@@ -351,8 +364,12 @@ function Header(props) {
             to="/book"
             selected={value === 5}
           >
-            <ListItemText disableTypography>Request Demo</ListItemText>
+            <ListItemText disableTypography>Login</ListItemText>
           </ListItem>
+
+          <Link to="/cart">
+            <CartIcon noOfOrders={props.noOfOrders} />
+          </Link>
         </List>
       </SwipeableDrawer>
       <IconButton
@@ -375,7 +392,7 @@ function Header(props) {
               className={classes.logoContainer}
               onClick={() => setValue(0)}
             >
-              <img className={classes.logo} alt="Robolyx Logo" src={logo} />
+              <img className={classes.logo} alt="Boral Logo" src={logo} />
             </Button>
 
             {matches ? drawer : tabs}

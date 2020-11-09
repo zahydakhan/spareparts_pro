@@ -15,12 +15,12 @@ class SparePartRetrieve(generics.RetrieveUpdateDestroyAPIView):
   
 
 class QuaryList(generics.ListCreateAPIView):
-    queryset = SpareParts.objects.all()
-    serializer_class = SparePartsSerializer
+    queryset = QuaryDetail.objects.all()
+    serializer_class = QuaryDetailSerializer
 
 class QuaryRetrieve(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SpareParts.objects.all()
-    serializer_class = SparePartsSerializer
+    queryset = QuaryDetail.objects.all()
+    serializer_class = QuaryDetailSerializer
 
 
 
