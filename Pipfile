@@ -11,6 +11,8 @@ djangorestframework = "*"
 django-cors-headers = "*"
 djangorestframework-jwt = "*"
 djangorestframework-simplejwt = "*"
+django-import-export = "*"
+forex-python = "*"
 
 [requires]
 python_version = "3.8"

@@ -2,35 +2,6 @@ import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import BasicTable from "./cart-page.component";
 
-const ComponentToPrint = React.forwardRef((props, ref) => {
-  return (
-    <table ref={ref}>
-      <thead>
-        <th>column 1</th>
-        <th>column 2</th>
-        <th>column 3</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td>data 1</td>
-          <td>data 2</td>
-          <td>data 3</td>
-        </tr>
-        <tr>
-          <td>data 1</td>
-          <td>data 2</td>
-          <td>data 3</td>
-        </tr>
-        <tr>
-          <td>data 1</td>
-          <td>data 2</td>
-          <td>data 3</td>
-        </tr>
-      </tbody>
-    </table>
-  );
-});
-
 const Example = ({ cart, setCart }) => {
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
@@ -45,7 +16,7 @@ const Example = ({ cart, setCart }) => {
         onClick={handlePrint}
       >
         {" "}
-        Print Resume{" "}
+        Print Order{" "}
       </button>
       <BasicTable cart={cart} setCart={setCart} ref={componentRef} />
     </div>

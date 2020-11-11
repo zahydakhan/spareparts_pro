@@ -193,20 +193,26 @@ function Header(props) {
 
   const menuOptions = [
     {
-      name: "Edit Quary Data",
-      link: "/solutions",
+      name: "Data Management",
+      link: "/datamanagement",
       activeIndex: 1,
       selectedIndex: 0,
     },
     {
-      name: "Edit Spare Parts",
-      link: "/spendanalytics",
+      name: "Spare Parts",
+      link: "/admin",
       activeIndex: 1,
       selectedIndex: 1,
     },
     {
-      name: "Edit Roller Spare Parts",
-      link: "/saving",
+      name: " Quaries",
+      link: "/admin-quary",
+      activeIndex: 1,
+      selectedIndex: 2,
+    },
+    {
+      name: " Rollers",
+      link: "/admin-roller",
       activeIndex: 1,
       selectedIndex: 2,
     },
@@ -215,8 +221,8 @@ function Header(props) {
   const routes = [
     { name: "Spare Parts List", link: "/", activeIndex: 0 },
     {
-      name: "Edit Quary Data",
-      link: "/editquary",
+      name: "Data Management",
+      link: "/datamanagement",
       activeIndex: 1,
       ariaOwns: anchorEl ? "simple-menu" : undefined,
       ariaPopup: anchorEl ? "true" : undefined,

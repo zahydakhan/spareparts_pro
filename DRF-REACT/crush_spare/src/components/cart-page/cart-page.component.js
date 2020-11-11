@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -20,6 +21,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import logo from "../../assets/boral-logo.png";
 import Delete from "@material-ui/icons/Delete";
+import { useReactToPrint } from "react-to-print";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -156,7 +158,12 @@ const BasicTable = React.forwardRef((props, ref) => {
             <Button variant="contained" className={classes.save}>
               Save Order
             </Button>
-            <Button variant="contained" className={classes.pdf}>
+            <Button
+              variant="contained"
+              className={classes.pdf}
+              component={Link}
+              to="/pdf"
+            >
               Print PDF
             </Button>
           </Grid>
