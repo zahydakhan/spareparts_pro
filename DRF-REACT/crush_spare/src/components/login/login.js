@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
-import { useLocalState } from "../../hooks";
+import { useLocalState, useLocalStateCart } from "../../hooks";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,6 +46,7 @@ export default function SignIn(props) {
 
   const [formData, updateFormData] = useState(initialFormData);
   const [loggedIn, setLoggedIn] = useLocalState("login");
+  const [userInfo, setUserInfo] = useLocalStateCart("user");
 
   const handleChange = (e) => {
     updateFormData({
@@ -73,10 +74,24 @@ export default function SignIn(props) {
         setLoggedIn(true);
         console.log(res);
         history.push("/");
-        //window.location.reload();
+        window.location.reload();
         //console.log(res.data);
       });
+
+    axiosInstance
+      .post(`user/api-token-auth/`, {
+        email: formData.email,
+        password: formData.password,
+      })
+      .then((resp) => {
+        const data = resp.data;
+        setUserInfo(data);
+
+        console.log(resp.data);
+      });
   };
+
+  console.log(userInfo);
 
   const classes = useStyles();
 

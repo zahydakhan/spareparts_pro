@@ -264,21 +264,38 @@ function Header(props) {
       selectedIndex: 5,
     },
   ];
-
-  const routes = [
-    { name: "Crushing Spare Parts", link: "/", activeIndex: 0 },
-    {
-      name: "Data Management",
-      activeIndex: 1,
-      ariaOwns: anchorEl ? "simple-menu" : undefined,
-      ariaPopup: anchorEl ? "true" : undefined,
-      mouseOver: (event) => handleClick(event),
-    },
-    { name: "Roller Spare Parts", link: "/roller", activeIndex: 2 },
-    { name: "Sites", link: "/sites", activeIndex: 3 },
-    { name: "Orders", link: "/orders", activeIndex: 4 },
-    { name: "Contact Us", link: "/contact", activeIndex: 5 },
-  ];
+  let routes = [];
+  if (JSON.parse(window.localStorage.getItem("user"))) {
+    if (JSON.parse(window.localStorage.getItem("user")).is_staff && loggedIn) {
+      routes = [
+        { name: "Crushing Spare Parts", link: "/", activeIndex: 0 },
+        {
+          name: "Data Management",
+          activeIndex: 1,
+          ariaOwns: anchorEl ? "simple-menu" : undefined,
+          ariaPopup: anchorEl ? "true" : undefined,
+          mouseOver: (event) => handleClick(event),
+        },
+        { name: "Roller Spare Parts", link: "/roller", activeIndex: 2 },
+        { name: "Sites", link: "/sites", activeIndex: 3 },
+        { name: "Orders", link: "/orders", activeIndex: 4 },
+        { name: "Contact Us", link: "/contact", activeIndex: 5 },
+      ];
+    } else if (
+      !JSON.parse(window.localStorage.getItem("user")).is_staff &&
+      loggedIn
+    ) {
+      routes = [
+        { name: "Crushing Spare Parts", link: "/", activeIndex: 0 },
+        { name: "Roller Spare Parts", link: "/roller", activeIndex: 1 },
+        { name: "Sites", link: "/sites", activeIndex: 2 },
+        { name: "Orders", link: "/orders", activeIndex: 3 },
+        { name: "Contact Us", link: "/contact", activeIndex: 4 },
+      ];
+    } else {
+      routes = [{ name: "Contact Us", link: "/contact", activeIndex: 5 }];
+    }
+  }
 
   useEffect(() => {
     [...menuOptions, ...routes].forEach((route) => {

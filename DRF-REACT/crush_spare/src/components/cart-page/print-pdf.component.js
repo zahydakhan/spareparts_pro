@@ -16,8 +16,12 @@ const Example = ({ cart, setCart }) => {
         color="primary"
         type="button"
         onClick={handlePrint}
+        style={{ marginLeft: "9em" }}
       >
         Print PDF
+      </Button>
+      <Button variant="contained" type="button" style={{ marginLeft: "0.5em" }}>
+        Save Order
       </Button>
 
       <BasicTable cart={cart} setCart={setCart} ref={componentRef} />

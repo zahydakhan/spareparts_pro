@@ -3,7 +3,7 @@ import Header from "../components/ui/Header";
 import Footer from "../components/ui/Footer";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./ui/Theme";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import LandingPage from "./LandingPage";
 import Register from "./login/register";
 import Login from "./login/login";
@@ -53,12 +53,24 @@ function App() {
           <Route
             exact
             path="/"
-            render={() => <LandingPage cart={cart} setCart={setCart} />}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <LandingPage cart={cart} setCart={setCart} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
           <Route
             exact
             path="/pdf"
-            render={() => <Example cart={cart} setCart={setCart} />}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Example cart={cart} setCart={setCart} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
 
           <Route
@@ -77,64 +89,190 @@ function App() {
             )}
           />
 
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/logout" component={Logout} />
           <Route
             exact
-            path="/pdf"
-            render={() => <CartPage cart={cart} setCart={setCart} />}
+            path="/register"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Register />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/logout" component={Logout} />
+
           {/* Spare Parts Admin Routes */}
-          <Route exact path="/admin" component={Admin} />
-          <Route exact path="/admin/create" component={Create} />
-          <Route exact path="/admin/edit/:id" component={Edit} />
-          <Route exact path="/admin/delete/:id" component={Delete} />
-          <Route exact path="/spare-upload" component={SparePartsUpload} />
+          <Route
+            exact
+            path="/admin"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Admin />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/admin/create"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Create />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/admin/edit/:id"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Edit />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/admin/delete/:id"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Delete />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+
           {/* Quary Admin Routes */}
-          <Route exact path="/admin-quary" component={AdminQuary} />
+          <Route
+            exact
+            path="/admin-quary"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <AdminQuary />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
           <Route
             exact
             path="/admin-quary/create-quary"
-            component={CreateQuary}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <CreateQuary />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
           <Route
             exact
             path="/admin-quary/edit-quary/:id"
-            component={EditQuary}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <EditQuary />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
           <Route
             exact
             path="/admin-quary/delete-quary/:id"
-            component={DeleteQuary}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <DeleteQuary />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
-          <Route exact path="/sites" component={QuaryTableContainer} />
+          <Route
+            exact
+            path="/sites"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <QuaryTableContainer />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
           {/* Roller Routes */}
           <Route
             exact
             path="/roller"
-            render={() => (
-              <RollerTableContainer cart={cart} setCart={setCart} />
-            )}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <RollerTableContainer cart={cart} setCart={setCart} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
-          <Route exact path="/admin-roller" component={AdminRoller} />
+          <Route
+            exact
+            path="/admin-roller"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <AdminRoller />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
           <Route
             exact
             path="/admin-roller/create-roller"
-            component={CreateRoller}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <CreateRoller />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
           <Route
             exact
             path="/admin-roller/edit-roller/:id"
-            component={EditRoller}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <EditRoller />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
           <Route
             exact
             path="/admin-roller/delete-roller/:id"
-            component={DeleteRoller}
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <DeleteRoller />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
-          <Route exact path="/roller-upload" component={RollerUpload} />
-          <Route exact path="/uploads" component={Uploads} />
+
+          <Route
+            exact
+            path="/uploads"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Uploads />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
         </Switch>
 
         <Footer
