@@ -158,6 +158,6 @@ SIMPLE_JWT = {
 }
 
 JWT_AUTH = {
-    # Authorization:Token xxx
-    'JWT_AUTH_HEADER_PREFIX': 'Token',
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
+    'users.utils.jwt_response_payload_handler', #app_name is name of the app which contains utils.py
 }
