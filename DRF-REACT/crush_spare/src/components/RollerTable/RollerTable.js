@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -21,6 +21,8 @@ import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import { useTheme } from "@material-ui/core/styles";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -97,7 +99,7 @@ const headCells = [
     id: "vendor_name",
     numeric: true,
     disablePadding: false,
-    label: "vendor_name",
+    label: "Vendor Name",
   },
   {
     id: "add",
@@ -122,13 +124,14 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead>
+    <TableHead className={classes.head}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             padding={headCell.disablePadding ? "none" : "default"}
             sortDirection={orderBy === headCell.id ? order : false}
+            className={classes.head_cell}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -161,7 +164,7 @@ EnhancedTableHead.propTypes = {
 
 const useToolbarStyles = makeStyles((theme) => ({
   root: {
-    paddingLeft: theme.spacing(2),
+    paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
   },
   highlight:
@@ -182,13 +185,18 @@ const useToolbarStyles = makeStyles((theme) => ({
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    marginTop: "1em",
+    marginLeft: 0,
+    marginRight: 0,
   },
   paper: {
-    width: "100%",
     marginBottom: theme.spacing(2),
   },
   table: {
     minWidth: 750,
+  },
+  tableFont: {
+    fontSize: "0.8em",
   },
   visuallyHidden: {
     border: 0,
@@ -201,6 +209,23 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
+  form: {
+    display: "flex",
+  },
+  input: {
+    width: "6em",
+    textAlign: "center",
+  },
+  button: {
+    borderColor: theme.palette.common.green,
+    marginLeft: "1em",
+  },
+  head: {
+    backgroundColor: theme.palette.common.green,
+  },
+  head_cell: {
+    color: "#fff",
+  },
 }));
 
 export default function EnhancedTable({ rows, cart, setCart }) {
@@ -209,9 +234,17 @@ export default function EnhancedTable({ rows, cart, setCart }) {
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [dense, setDense] = React.useState(true);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [addQuantity, setAddQuantity] = React.useState(0);
+  const theme = useTheme();
+  const [audToUsd, setAudToUsd] = React.useState(0.0);
+
+  useEffect(() => {
+    fetch(`https://api.exchangeratesapi.io/latest?base=USD`)
+      .then((res) => res.json())
+      .then((rec) => setAudToUsd(rec["rates"]["AUD"]));
+  }, [audToUsd]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -248,7 +281,7 @@ export default function EnhancedTable({ rows, cart, setCart }) {
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <div className={classes.root}>
+    <Container className={classes.root} disableGutters maxWidth={false}>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
@@ -304,7 +337,11 @@ export default function EnhancedTable({ rows, cart, setCart }) {
                         {row.bearing}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.aud}
+                        {row.aud
+                          ? row.aud
+                          : (
+                              parseFloat(row.usd) * parseFloat(audToUsd)
+                            ).toFixed(2)}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
                         {row.usd}
@@ -313,15 +350,27 @@ export default function EnhancedTable({ rows, cart, setCart }) {
                         {row.vendor_name}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        <form onSubmit={handleSubmit(row)}>
-                          <input
-                            type="number"
-                            placeholder={addQuantity}
-                            onChange={(e) => setAddQuantity(e.target.value)}
-                            value={addQuantity}
-                          />
-                          <Button type="submit">Add to Cart</Button>
-                        </form>
+                        <div>
+                          <form
+                            className={classes.form}
+                            onSubmit={handleSubmit(row)}
+                          >
+                            <input
+                              type="number"
+                              placeholder={addQuantity}
+                              onChange={(e) => setAddQuantity(e.target.value)}
+                              value={addQuantity}
+                              className={classes.input}
+                            />
+                            <Button
+                              type="submit"
+                              variant="outlined"
+                              className={classes.button}
+                            >
+                              Add
+                            </Button>
+                          </form>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
@@ -348,6 +397,6 @@ export default function EnhancedTable({ rows, cart, setCart }) {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-    </div>
+    </Container>
   );
 }

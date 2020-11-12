@@ -25,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
   Link: {
     color: "#bbb",
     fontFamily: "Raleway",
-    fontSize: "1.3rem",
+    fontSize: "1rem",
     fontWeight: 500,
     textDecoration: "none",
   },
   gridItem: {
-    margin: "2em",
+    margin: "1em",
   },
   Linkdummy: {
     color: "#D2DADB",
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   build: {
     fontFamily: "Merriweather",
     fontWeight: 600,
-    fontSize: "1.5rem",
+    fontSize: "1.2rem",
     color: "#eee",
     marginLeft: "2em",
   },
@@ -146,6 +146,10 @@ export default function Footer(props) {
           <Grid container item className={classes.gridItem}>
             <span className={classes.Link}>
               © 2020 Boral. All rights reserved.
+              <br />
+              <span style={{ marginLeft: "0.9em" }}>
+                Contact: waqas.khan@boral.com.au
+              </span>
             </span>
           </Grid>
         </Grid>

@@ -13,7 +13,7 @@ urlpatterns = [
     path('admin/edit/sparedetail/<int:pk>/', views.AdminSpareDetail.as_view(), name='admindetailspare'),
     path('admin/edit/<int:pk>/', views.EditSpare.as_view(), name='editspare'),
     path('admin/delete/<int:pk>/', views.DeleteSpare.as_view(), name='deletespare'),
-    path('export-csv/', views.export, name='export'),
+    path('export-spare/', views.export, name='export'),
     #Admin Quary Urls
     path('admin-quary/create-quary/', views.AddQuary.as_view(), name='createquary'),
     path('admin-quary/edit-quary/quarydetail/<int:pk>/', views.AdminQuaryDetail.as_view(), name='admindetailquary'),

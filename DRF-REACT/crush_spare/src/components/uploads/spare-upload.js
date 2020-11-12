@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import axiosInstance from "../../axios";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 
-class ExcelToJson extends React.Component {
+class SparePartsUpload extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -111,24 +116,28 @@ class ExcelToJson extends React.Component {
   }
 
   render() {
+    const classes = this.props;
     return (
-      <div>
+      <React.Fragment>
         <input
           type="file"
           id="file"
           ref="fileUploader"
           onChange={this.filePathset.bind(this)}
         />
-        <button
+        <br />
+        <Button
+          style={{ marginTop: "1.5em", backgroundColor: "#ffde00" }}
+          variant="contained"
           onClick={() => {
             this.readFile();
           }}
         >
-          Read File
-        </button>
-      </div>
+          Upload Spare Parts
+        </Button>
+      </React.Fragment>
     );
   }
 }
 
-export default ExcelToJson;
+export default SparePartsUpload;

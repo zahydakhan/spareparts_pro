@@ -36,6 +36,43 @@ import { useLocalState } from "../../hooks";
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 import { connect } from "react-redux";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import SendIcon from "@material-ui/icons/Send";
+import { withStyles } from "@material-ui/core/styles";
+
+const StyledMenu = withStyles({
+  paper: {
+    border: "1px solid #d3d4d5",
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "center",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "center",
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -145,6 +182,8 @@ const useStyles = makeStyles((theme) => ({
   },
   appbar: {
     zIndex: theme.zIndex.modal + 1,
+    backgroundColor: "#FFF",
+    color: "#000",
   },
 }));
 
@@ -174,14 +213,10 @@ function Header(props) {
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
-
-    setOpenMenu(true);
   };
 
-  const handleClose = (e) => {
+  const handleClose = () => {
     setAnchorEl(null);
-
-    setOpenMenu(false);
   };
 
   const handleMenuItemClick = (event, i) => {
@@ -193,44 +228,56 @@ function Header(props) {
 
   const menuOptions = [
     {
-      name: "Data Management",
-      link: "/datamanagement",
+      name: "Edit Crushing Spare Parts",
+      link: "/admin",
       activeIndex: 1,
       selectedIndex: 0,
     },
     {
-      name: "Spare Parts",
-      link: "/admin",
+      name: " Edit Sites Data",
+      link: "/admin-quary",
       activeIndex: 1,
       selectedIndex: 1,
     },
     {
-      name: " Quaries",
-      link: "/admin-quary",
-      activeIndex: 1,
-      selectedIndex: 2,
-    },
-    {
-      name: " Rollers",
+      name: " Edit Roller Spare Parts",
       link: "/admin-roller",
       activeIndex: 1,
       selectedIndex: 2,
     },
+    {
+      name: " Upload Data",
+      link: "/uploads",
+      activeIndex: 1,
+      selectedIndex: 3,
+    },
+    {
+      name: " Add New User",
+      link: "/register",
+      activeIndex: 1,
+      selectedIndex: 4,
+    },
+    {
+      name: " Edit User",
+      link: "/edit-user",
+      activeIndex: 1,
+      selectedIndex: 5,
+    },
   ];
 
   const routes = [
-    { name: "Spare Parts List", link: "/", activeIndex: 0 },
+    { name: "Crushing Spare Parts", link: "/", activeIndex: 0 },
     {
       name: "Data Management",
-      link: "/datamanagement",
       activeIndex: 1,
       ariaOwns: anchorEl ? "simple-menu" : undefined,
       ariaPopup: anchorEl ? "true" : undefined,
       mouseOver: (event) => handleClick(event),
     },
-    { name: "Upload Data", link: "/addspare", activeIndex: 2 },
-    { name: "Quary List", link: "/company", activeIndex: 3 },
-    { name: "Roller Spare List", link: "/roller", activeIndex: 4 },
+    { name: "Roller Spare Parts", link: "/roller", activeIndex: 2 },
+    { name: "Sites", link: "/sites", activeIndex: 3 },
+    { name: "Orders", link: "/orders", activeIndex: 4 },
+    { name: "Contact Us", link: "/contact", activeIndex: 5 },
   ];
 
   useEffect(() => {
@@ -271,16 +318,7 @@ function Header(props) {
           />
         ))}
       </Tabs>
-      <Link1
-        underline="none"
-        color="textPrimary"
-        href="#"
-        className={classes.link}
-        component={NavLink}
-        to="/register"
-      >
-        Register
-      </Link1>
+
       {localStorage.getItem("login") === "true" ? (
         <Button
           variant="contained"
@@ -301,7 +339,7 @@ function Header(props) {
           Login
         </Button>
       )}
-      <Link to="/cart">
+      <Link to="/pdf">
         <CartIcon noOfOrders={props.noOfOrders} />
       </Link>
     </React.Fragment>
@@ -390,7 +428,7 @@ function Header(props) {
   return (
     <React.Fragment>
       <ElevationScroll>
-        <AppBar position="fixed" color="primary" className={classes.appbar}>
+        <AppBar position="fixed" className={classes.appbar}>
           <Toolbar position="fixed">
             <Button
               component={Link}
@@ -403,7 +441,37 @@ function Header(props) {
 
             {matches ? drawer : tabs}
 
-            <Menu
+            <StyledMenu
+              id="customized-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              MenuListProps={{ onMouseLeave: handleClose }}
+              elevation={0}
+            >
+              {menuOptions.map((option, i) => (
+                <StyledMenuItem
+                  to={option.link}
+                  key={`${option}${i}`}
+                  component={Link}
+                  to={option.link}
+                  classes={{ root: classes.menuItem }}
+                  onClick={(event) => {
+                    handleMenuItemClick(event, i);
+                    setValue(1);
+                    handleClose();
+                  }}
+                >
+                  <ListItemIcon>
+                    <SendIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary={option.name} />
+                </StyledMenuItem>
+              ))}
+            </StyledMenu>
+
+            {/* <Menu
               id="simple-menu"
               anchorEl={anchorEl}
               open={openMenu}
@@ -430,7 +498,7 @@ function Header(props) {
                   {option.name}
                 </MenuItem>
               ))}
-            </Menu>
+            </Menu> */}
           </Toolbar>
         </AppBar>
       </ElevationScroll>

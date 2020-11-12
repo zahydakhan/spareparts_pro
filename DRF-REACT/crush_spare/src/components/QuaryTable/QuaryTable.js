@@ -53,53 +53,58 @@ function stableSort(array, comparator) {
 const headCells = [
   { id: "id", numeric: false, disablePadding: false, label: "ID" },
   {
-    id: "part_number",
+    id: "site",
     numeric: true,
     disablePadding: false,
-    label: "Part Number",
+    label: "Site",
   },
   {
-    id: "description",
+    id: "address",
     numeric: true,
     disablePadding: false,
-    label: "Description",
+    label: "Address",
   },
   {
-    id: "vendor_name",
+    id: "state",
     numeric: true,
     disablePadding: false,
-    label: "Vendor Name",
+    label: "State",
   },
   {
-    id: "vendor_status",
+    id: "manager_name",
     numeric: true,
     disablePadding: false,
-    label: "Vendor Status",
+    label: "Manager Name",
   },
   {
-    id: "aud",
+    id: "manager_email",
     numeric: true,
     disablePadding: false,
-    label: "Price AUD",
+    label: "Manager Email",
   },
   {
-    id: "weight_kg",
+    id: "manager_phone",
     numeric: true,
     disablePadding: false,
-    label: "Weight (kg)",
-  },
-  { id: "machine", numeric: true, disablePadding: false, label: "Machine" },
-  {
-    id: "model_number",
-    numeric: true,
-    disablePadding: false,
-    label: "Model Number",
+    label: "Manager Phone",
   },
   {
-    id: "add",
+    id: "supervisor_name",
     numeric: true,
     disablePadding: false,
-    label: "Add to Order",
+    label: "Supervisor Name",
+  },
+  {
+    id: "supervisor_email",
+    numeric: true,
+    disablePadding: false,
+    label: "Supervisor Email",
+  },
+  {
+    id: "supervisor_phone",
+    numeric: true,
+    disablePadding: false,
+    label: "Supervisor Phone",
   },
 ];
 
@@ -222,7 +227,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable({ rows, cart, setCart }) {
+export default function EnhancedTable({ rows }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -233,12 +238,6 @@ export default function EnhancedTable({ rows, cart, setCart }) {
   const [addQuantity, setAddQuantity] = React.useState(0);
   const theme = useTheme();
   const [audToUsd, setAudToUsd] = React.useState(0.0);
-
-  useEffect(() => {
-    fetch(`https://api.exchangeratesapi.io/latest?base=USD`)
-      .then((res) => res.json())
-      .then((rec) => setAudToUsd(rec["rates"]["AUD"]));
-  }, [audToUsd]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -258,18 +257,6 @@ export default function EnhancedTable({ rows, cart, setCart }) {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
-
-  const handleSubmit = (row) => (event) => {
-    event.preventDefault();
-    console.log(event.target[0].value);
-
-    console.log(row);
-    row.quantity = event.target[0].value;
-    setCart([...cart, row]);
-    console.log(row);
-  };
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -296,71 +283,40 @@ export default function EnhancedTable({ rows, cart, setCart }) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                    >
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                       <TableCell className={classes.tableFont}>
                         {row.id}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.part_number}
+                        {row.site}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.description}
+                        {row.address}
+                      </TableCell>
+
+                      <TableCell className={classes.tableFont}>
+                        {row.state}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.vendor_name}
+                        {row.manager_name}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.vendor_status}
+                        {row.manager_email}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.aud
-                          ? row.aud
-                          : (
-                              parseFloat(row.usd) * parseFloat(audToUsd)
-                            ).toFixed(2)}
+                        {row.manager_phone}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.weight_kg}
+                        {row.supervisor_name}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.machine}
+                        {row.supervisor_email}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.model_number}
-                      </TableCell>
-                      <TableCell className={classes.tableFont}>
-                        <div>
-                          <form
-                            className={classes.form}
-                            onSubmit={handleSubmit(row)}
-                          >
-                            <input
-                              type="number"
-                              placeholder={addQuantity}
-                              onChange={(e) => setAddQuantity(e.target.value)}
-                              value={addQuantity}
-                              className={classes.input}
-                            />
-                            <Button
-                              type="submit"
-                              variant="outlined"
-                              className={classes.button}
-                            >
-                              Add
-                            </Button>
-                          </form>
-                        </div>
+                        {row.supervisor_phone}
                       </TableCell>
                     </TableRow>
                   );

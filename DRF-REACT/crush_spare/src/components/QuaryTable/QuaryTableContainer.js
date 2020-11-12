@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RollerTable from "./RollerTable";
+import QuaryTable from "./QuaryTable";
 import SparepartsLoadingComponent from "../ui/SparepartsLoading";
 import axiosInstance from "../../axios";
 import Grid from "@material-ui/core/Grid";
@@ -41,25 +41,25 @@ const useStyles = makeStyles((theme) => ({
 const rows = [];
 const columns = [];
 
-function RollerTableContainer(props) {
+function QuaryTableContainer(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const SpareLoading = SparepartsLoadingComponent(RollerTable);
+  const SpareLoading = SparepartsLoadingComponent(QuaryTable);
   const [appState, setAppState] = useState({
     loading: false,
-    posts: null,
+    quaries: null,
   });
   const [searchResult, setSearchResult] = React.useState("");
   const [rows, setRows] = React.useState([]);
 
   useEffect(() => {
-    axiosInstance.get("roller/").then((res) => {
+    axiosInstance.get("parts/quaries/").then((res) => {
       const tableData = res.data;
-      setAppState({ loading: false, posts: tableData });
+      setAppState({ loading: false, quaries: tableData });
       console.log(res.data);
       if (searchResult) {
         const filteredData = tableData.filter((cty) =>
-          cty.description.toLowerCase().includes(searchResult.toLowerCase())
+          cty.site.toLowerCase().includes(searchResult.toLowerCase())
         );
         console.log(filteredData);
         setRows(filteredData);
@@ -87,33 +87,31 @@ function RollerTableContainer(props) {
             <img
               src={RollerIcon}
               className={classes.rollericon}
-              alt="roller parts icon"
+              alt="quary icon"
             />
           </Grid>
           <Grid item>
             <Typography variant="h3" className={classes.title}>
-              Roller Spare Parts
+              Sites
             </Typography>
           </Grid>
         </Grid>
 
         <input
           type="Search"
-          placeholder="Search Roller Spareparts"
+          placeholder="Search Site"
           onChange={(e) => setSearchResult(e.target.value)}
           className={classes.search}
         />
 
         <SpareLoading
-          cart={props.cart}
-          setCart={props.setCart}
           columns={columns}
           rows={rows}
           isLoading={appState.loading}
-          posts={appState.posts}
+          quaries={appState.quaries}
         />
       </Container>
     </React.Fragment>
   );
 }
-export default RollerTableContainer;
+export default QuaryTableContainer;

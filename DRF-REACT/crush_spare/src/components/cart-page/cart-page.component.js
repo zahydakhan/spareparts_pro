@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "2em",
   },
   formControl: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(),
     minWidth: 120,
   },
   mainContainer: {
@@ -48,14 +48,17 @@ const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 100,
     minHeight: 150,
+    marginTop: "2em",
   },
   subTitle: {
     fontWeight: "bold",
     fontSize: "1.3em",
+    color: theme.palette.common.green,
   },
   purchase: {
     ...theme.typography.h2,
-    fontSize: "2em",
+    fontSize: "1.7em",
+    marginRight: "0.3em",
   },
   logo: {
     margin: "0.5em",
@@ -76,12 +79,25 @@ const useStyles = makeStyles((theme) => ({
   total: {
     ...theme.typography.h2,
     fontSize: "1em",
-    paddingRight: "6.5em",
     marginTop: "1em",
+    fontFamily: "Roboto",
+  },
+  totalCon: {
+    border: "1px solid #e0e0e0",
+    padding: "0.5em",
   },
   save: {
     marginRight: "1em",
     backgroundColor: theme.palette.common.yellow,
+  },
+  po_info: {
+    fontSize: "1em",
+  },
+  table_head: {
+    backgroundColor: theme.palette.common.green,
+  },
+  table_cell: {
+    color: "#ffffff",
   },
 }));
 
@@ -107,13 +123,18 @@ const BasicTable = React.forwardRef((props, ref) => {
       created_at: "2020-11-08T17:50:00Z",
     },
   });
+  const [audToUsd, setAudToUsd] = React.useState(0.0);
 
   useEffect(() => {
     axiosInstance.get("parts/quary/").then((res) => {
       console.log(res.data);
       setQuaryInfo(res.data);
     });
-  }, [inputSite]);
+
+    fetch(`https://api.exchangeratesapi.io/latest?base=USD`)
+      .then((res) => res.json())
+      .then((rec) => setAudToUsd(rec["rates"]["AUD"]));
+  }, [inputSite, audToUsd]);
 
   const removeFromCart = (productToRemove) => {
     setCart(cart.filter((product) => product !== productToRemove));
@@ -126,6 +147,7 @@ const BasicTable = React.forwardRef((props, ref) => {
   };
 
   console.log(filteredQuary);
+  console.log(cart);
 
   return (
     <div ref={ref}>
@@ -136,78 +158,69 @@ const BasicTable = React.forwardRef((props, ref) => {
         component="main"
         className={classes.mainContainer}
       >
-        <Grid container item justify="space-between">
-          <Grid item>
-            <FormControl className={classes.formControl}>
-              <InputLabel id="demo-simple-select-label">Select Site</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={inputSite}
-                onChange={handleChange}
-              >
-                {quaryInfo.map((site) => (
-                  <MenuItem key={site.id} value={site.site}>
-                    {site.site}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+        <Grid container item>
+          <Grid container item xs={6}>
+            <Grid container alignItems="center">
+              <Grid item>Site Name:</Grid>
+              <Grid item>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={inputSite}
+                    onChange={handleChange}
+                  >
+                    {quaryInfo.map((site) => (
+                      <MenuItem key={site.id} value={site.site}>
+                        {site.site}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item style={{ marginTop: "1em" }}>
-            <Button variant="contained" className={classes.save}>
-              Save Order
-            </Button>
-            <Button
-              variant="contained"
-              className={classes.pdf}
-              component={Link}
-              to="/pdf"
+          <Grid container item xs={6} justify="flex-end" alignItems="center">
+            <Grid item>
+              <Typography className={classes.purchase}>
+                <Grid container direction="column" alignItems="flex-end">
+                  <Grid item>Purchase</Grid>
+                  <Grid item>Order</Grid>
+                </Grid>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <img className={classes.logo} alt="Boral Logo" src={logo} />
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item sm={6}>
+              <Typography>
+                <span className={classes.address}>Address </span>
+                <br />
+                {filteredQuary[0].address}
+              </Typography>
+            </Grid>
+
+            <Grid
+              sm={6}
+              container
+              item
+              style={{ marginTop: "1em" }}
+              alignItems="flex-end"
+              direction="column"
             >
-              Print PDF
-            </Button>
+              <Typography className={classes.po_info}>
+                PO Date: __________________
+              </Typography>
+              <Typography className={classes.po_info}>
+                PO #: _____________________
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
 
         <Grid container spacing={4}>
-          <Grid item xs={6}>
-            <img className={classes.logo} alt="Boral Logo" src={logo} />
-          </Grid>
-          <Grid item xs={6} align="right">
-            <Typography className={classes.purchase}>
-              Purchase <br /> Order
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={4}>
-          <Grid item xs={6}>
-            <Card className={classes.root}>
-              <CardContent>
-                <Typography gutterBottom>
-                  <span className={classes.subTitle}>Address </span>
-                  <br />
-                  {filteredQuary[0].address}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6}>
-            <Card className={classes.root}>
-              <CardContent>
-                <Typography gutterBottom>
-                  <span className={classes.subTitle}>Site Name </span>
-                  <br />
-                  {filteredQuary[0].site}
-                  <br />
-                  <span className={classes.subHeading}>Order Date:</span>
-                  <span>{new Date().toISOString().slice(0, 10)}</span>
-                  <br />
-                  <span className={classes.subHeading}>Order Ref #: </span>
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
           <Grid item xs={6}>
             <Card className={classes.root}>
               <CardContent>
@@ -248,7 +261,7 @@ const BasicTable = React.forwardRef((props, ref) => {
           </Grid>
         </Grid>
 
-        {cart !== [] ? (
+        {cart.length ? (
           <Grid>
             <Grid
               container
@@ -259,15 +272,50 @@ const BasicTable = React.forwardRef((props, ref) => {
               <Grid item>
                 <TableContainer component={Paper}>
                   <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
+                    <TableHead className={classes.table_head}>
                       <TableRow>
-                        <TableCell align="center">Part Number</TableCell>
-                        <TableCell align="center">Description</TableCell>
-                        <TableCell align="center">Vendor Name</TableCell>
-                        <TableCell align="center">Unit Price</TableCell>
-                        <TableCell align="center">Quantity</TableCell>
-                        <TableCell align="center">Total</TableCell>
-                        <TableCell align="center">Delete</TableCell>
+                        <TableCell
+                          className={classes.table_cell}
+                          align="center"
+                        >
+                          Part Number
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className={classes.table_cell}
+                        >
+                          Description
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className={classes.table_cell}
+                        >
+                          Vendor Name
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className={classes.table_cell}
+                        >
+                          Unit Price
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className={classes.table_cell}
+                        >
+                          Quantity
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className={classes.table_cell}
+                        >
+                          Total
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className={classes.table_cell}
+                        >
+                          Delete
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -275,22 +323,41 @@ const BasicTable = React.forwardRef((props, ref) => {
                         ? cart.map((cartItem) => (
                             <TableRow key={cartItem.id}>
                               <TableCell align="center">
-                                {cartItem.part_number}
+                                {cartItem.bearing
+                                  ? cartItem.bearing
+                                  : cartItem.part_number}
                               </TableCell>
                               <TableCell align="center">
-                                {cartItem.description}
+                                {cartItem.bearing
+                                  ? `${cartItem.description} - ${cartItem.roller_diameter} x ${cartItem.wall_thickness} x ${cartItem.roller_length}`
+                                  : cartItem.description}
                               </TableCell>
                               <TableCell align="center">
                                 {cartItem.vendor_name}
                               </TableCell>
                               <TableCell align="center">
-                                ${cartItem.aud}
+                                $
+                                {cartItem.aud
+                                  ? cartItem.aud
+                                  : (
+                                      parseFloat(cartItem.usd) *
+                                      parseFloat(audToUsd)
+                                    ).toFixed(2)}
                               </TableCell>
                               <TableCell align="center">
                                 {cartItem.quantity}
                               </TableCell>
                               <TableCell align="center">
-                                ${cartItem.quantity * cartItem.aud}
+                                $
+                                {cartItem.aud
+                                  ? (cartItem.aud * cartItem.quantity).toFixed(
+                                      2
+                                    )
+                                  : (
+                                      parseFloat(cartItem.usd) *
+                                      parseFloat(audToUsd) *
+                                      cartItem.quantity
+                                    ).toFixed(2)}
                               </TableCell>
                               <TableCell align="center">
                                 <Delete
@@ -300,7 +367,7 @@ const BasicTable = React.forwardRef((props, ref) => {
                               </TableCell>
                             </TableRow>
                           ))
-                        : 0}
+                        : "No order added"}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -308,10 +375,14 @@ const BasicTable = React.forwardRef((props, ref) => {
             </Grid>
 
             <Grid container>
-              <Grid container item justify="flex-end">
-                <Grid item>
+              <Grid container item alignItems="flex-end" direction="column">
+                <Grid
+                  item
+                  className={classes.totalCon}
+                  style={{ margin: "1em 0 0.5em 0" }}
+                >
                   <Typography className={classes.total}>
-                    <span style={{ marginRight: "1em" }}>Total:</span>
+                    <span style={{ marginRight: "1em" }}>Total Quantity:</span>
                     {cart.reduce(
                       (acc, curr) =>
                         parseFloat(acc) + parseFloat(curr.quantity),
@@ -319,16 +390,23 @@ const BasicTable = React.forwardRef((props, ref) => {
                     )}
                   </Typography>
                 </Grid>
-                <Grid item>
+
+                <Grid item className={classes.totalCon}>
                   <Typography className={classes.total}>
-                    <span style={{ marginRight: "4em" }}>
+                    <span style={{ marginRight: "1em" }}>Total Price:</span>
+                    <span>
                       $
-                      {cart.reduce(
-                        (acc, curr) =>
-                          parseFloat(acc) +
-                          parseFloat(curr.quantity) * parseFloat(curr.aud),
-                        0
-                      )}
+                      {cart
+                        .reduce(
+                          (acc, curr) =>
+                            parseFloat(acc) +
+                            parseFloat(curr.quantity) *
+                              (curr.aud
+                                ? parseFloat(curr.aud)
+                                : parseFloat(curr.usd) * audToUsd),
+                          0
+                        )
+                        .toFixed(2)}
                     </span>
                   </Typography>
                 </Grid>
@@ -336,7 +414,7 @@ const BasicTable = React.forwardRef((props, ref) => {
             </Grid>
           </Grid>
         ) : (
-          <div></div>
+          <div>No Order Added</div>
         )}
       </Container>
     </div>

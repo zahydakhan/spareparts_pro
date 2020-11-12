@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import BasicTable from "./cart-page.component";
+import Button from "@material-ui/core/Button";
 
 const Example = ({ cart, setCart }) => {
   const componentRef = useRef();
@@ -10,14 +11,15 @@ const Example = ({ cart, setCart }) => {
 
   return (
     <div className="bg-gray-200 p-6">
-      <button
+      <Button
+        variant="contained"
+        color="primary"
         type="button"
-        className="bg-gray-500 border border-gray-500 p-2 mb-4"
         onClick={handlePrint}
       >
-        {" "}
-        Print Order{" "}
-      </button>
+        Print PDF
+      </Button>
+
       <BasicTable cart={cart} setCart={setCart} ref={componentRef} />
     </div>
   );

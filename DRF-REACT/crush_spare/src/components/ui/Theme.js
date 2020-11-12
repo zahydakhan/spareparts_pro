@@ -8,6 +8,13 @@ const robDarkGrey = "#F1F0F0";
 const robYellow = "#FFDE00";
 
 export default createMuiTheme({
+  overrides: {
+    MuiTableCell: {
+      stickyHeader: {
+        backgroundColor: "robGreen",
+      },
+    },
+  },
   palette: {
     common: {
       blue: robGrey,
@@ -28,8 +35,8 @@ export default createMuiTheme({
     tab: {
       fontFamily: "Merriweather",
       textTransform: "none",
-      fontWeight: 700,
-      fontSize: "1rem",
+      fontWeight: 200,
+      fontSize: "0.9rem",
     },
     h3: {
       fontSize: "2em",

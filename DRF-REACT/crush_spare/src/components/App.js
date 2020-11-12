@@ -16,13 +16,13 @@ import Admin from "../Admin";
 import Create from "../components/admin/create";
 import Edit from "../components/admin/edit";
 import Delete from "../components/admin/delete";
-import ExcelToJson from "../components/uploads/excelToJson";
+import SparePartsUpload from "../components/uploads/spare-upload";
 //Quary Imports
 import AdminQuary from "../AdminQuary.js";
 import CreateQuary from "../components/admin-quary/create-quary";
 import EditQuary from "../components/admin-quary/edit-quary";
 import DeleteQuary from "../components/admin-quary/delete-quary";
-//import ExcelToJson from "../components/uploads/excelToJson";
+import QuaryTableContainer from "../components/QuaryTable/QuaryTableContainer";
 
 //Roller imports
 import RollerTableContainer from "./RollerTable/RollerTableContainer";
@@ -30,7 +30,9 @@ import AdminRoller from "../AdminRoller.js";
 import CreateRoller from "../components/admin-roller/create-roller";
 import EditRoller from "../components/admin-roller/edit-roller";
 import DeleteRoller from "../components/admin-roller/delete-roller";
+import RollerUpload from "../components/uploads/roller-uploads";
 //import ExcelToJson from "../components/uploads/excelToJson";
+import Uploads from "./uploads/uploads";
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -61,91 +63,6 @@ function App() {
 
           <Route
             exact
-            path="/spendanalytics"
-            component={() => (
-              <div>
-                Spend Analytics
-                {[...new Array(25)]
-                  .map(
-                    () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-                  )
-                  .join("\n")}
-              </div>
-            )}
-          />
-          <Route
-            exact
-            path="/saving"
-            component={() => (
-              <div>
-                Saving Life Cycle
-                {[...new Array(25)]
-                  .map(
-                    () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-                  )
-                  .join("\n")}
-              </div>
-            )}
-          />
-          <Route
-            exact
-            path="/analytics"
-            component={() => (
-              <div>
-                Data Analytics
-                {[...new Array(25)]
-                  .map(
-                    () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-                  )
-                  .join("\n")}
-              </div>
-            )}
-          />
-          <Route
-            exact
-            path="/addspare"
-            component={() => (
-              <div>
-                Resources
-                {[...new Array(25)]
-                  .map(
-                    () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-                  )
-                  .join("\n")}
-              </div>
-            )}
-          />
-          <Route
-            exact
-            path="/adduser"
-            component={() => (
-              <div>
-                Company
-                {[...new Array(25)]
-                  .map(
-                    () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-                  )
-                  .join("\n")}
-              </div>
-            )}
-          />
-          <Route
-            exact
             path="/contact"
             component={() => (
               <div>
@@ -159,29 +76,13 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
               </div>
             )}
           />
-          <Route
-            exact
-            path="/book"
-            component={() => (
-              <div>
-                Book
-                {[...new Array(25)]
-                  .map(
-                    () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-                  )
-                  .join("\n")}
-              </div>
-            )}
-          />
+
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/logout" component={Logout} />
           <Route
             exact
-            path="/cart"
+            path="/pdf"
             render={() => <CartPage cart={cart} setCart={setCart} />}
           />
           {/* Spare Parts Admin Routes */}
@@ -189,7 +90,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
           <Route exact path="/admin/create" component={Create} />
           <Route exact path="/admin/edit/:id" component={Edit} />
           <Route exact path="/admin/delete/:id" component={Delete} />
-          <Route exact path="/exceltojson" component={ExcelToJson} />
+          <Route exact path="/spare-upload" component={SparePartsUpload} />
           {/* Quary Admin Routes */}
           <Route exact path="/admin-quary" component={AdminQuary} />
           <Route
@@ -207,6 +108,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
             path="/admin-quary/delete-quary/:id"
             component={DeleteQuary}
           />
+          <Route exact path="/sites" component={QuaryTableContainer} />
           {/* Roller Routes */}
           <Route
             exact
@@ -231,6 +133,8 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
             path="/admin-roller/delete-roller/:id"
             component={DeleteRoller}
           />
+          <Route exact path="/roller-upload" component={RollerUpload} />
+          <Route exact path="/uploads" component={Uploads} />
         </Switch>
 
         <Footer

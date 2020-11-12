@@ -71,9 +71,9 @@ export default function SignIn(props) {
         axiosInstance.defaults.headers["Authorization"] =
           "JWT " + localStorage.getItem("access_token");
         setLoggedIn(true);
-        history.push("/");
-        window.location.reload();
         console.log(res);
+        history.push("/");
+        //window.location.reload();
         //console.log(res.data);
       });
   };

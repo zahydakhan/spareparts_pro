@@ -7,13 +7,32 @@ import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
+import SpareIcon from "../assets/sparepart1.png";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
-    marginLeft: "auto",
-    marginRight: "auto",
+    marginLeft: "0em",
+    marginRight: "0em",
+    paddingLeft: "4em",
+    paddingRight: "4em",
     marginBottom: "6em",
     marginTop: "2em",
+  },
+  search: {
+    height: "3em",
+    fontSize: "1.2em",
+    paddingLeft: "2em",
+  },
+  title: {
+    fontFamily: "Merriweather",
+    fontWeight: 700,
+    fontSize: "1.5em",
+  },
+  spareicon: {
+    height: "3em",
+  },
+  tableHeading: {
+    margin: "1em 0",
   },
 }));
 
@@ -38,7 +57,7 @@ function LandingPage(props) {
       console.log(res.data);
       if (searchResult) {
         const filteredData = tableData.filter((cty) =>
-          cty.part_number.includes(searchResult)
+          cty.part_number.toLowerCase().includes(searchResult.toLowerCase())
         );
         console.log(filteredData);
         setRows(filteredData);
@@ -51,18 +70,38 @@ function LandingPage(props) {
     <React.Fragment>
       <Container
         container
-        fixed
-        //minWidth="md"
+        maxWidth={false}
         component="main"
         className={classes.mainContainer}
+        disableGutters
       >
-        <Typography variant="h2">Spare Parts List</Typography>
+        <Grid
+          container
+          className={classes.tableHeading}
+          alignItems="center"
+          spacing={1}
+        >
+          <Grid item>
+            <img
+              src={SpareIcon}
+              className={classes.spareicon}
+              alt="spare parts icon"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="h3" className={classes.title}>
+              Crushing Spare Parts
+            </Typography>
+          </Grid>
+        </Grid>
+
         <input
           type="Search"
           placeholder="Search Spareparts"
           onChange={(e) => setSearchResult(e.target.value)}
-          className="table__search"
+          className={classes.search}
         />
+
         <SpareLoading
           cart={props.cart}
           setCart={props.setCart}
