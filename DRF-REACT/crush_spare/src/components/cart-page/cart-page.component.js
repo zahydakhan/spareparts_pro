@@ -107,7 +107,7 @@ const BasicTable = React.forwardRef((props, ref) => {
   const classes = useStyles();
   const theme = useTheme();
   const [quaryInfo, setQuaryInfo] = useState([]);
-  const [inputSite, setInputSite] = useState("Ormeau");
+
   const [filteredQuary, setFilteredQuary] = useState({
     0: {
       id: 2,
@@ -129,12 +129,12 @@ const BasicTable = React.forwardRef((props, ref) => {
     axiosInstance.get("parts/quary/").then((res) => {
       console.log(res.data);
       setQuaryInfo(res.data);
-    });
+    }, []);
 
     fetch(`https://api.exchangeratesapi.io/latest?base=USD`)
       .then((res) => res.json())
       .then((rec) => setAudToUsd(rec["rates"]["AUD"]));
-  }, [inputSite, audToUsd]);
+  }, [props.inputSite, audToUsd]);
 
   const removeFromCart = (productToRemove) => {
     setCart(cart.filter((product) => product !== productToRemove));
@@ -142,7 +142,7 @@ const BasicTable = React.forwardRef((props, ref) => {
 
   const handleChange = (event) => {
     const sitee = event.target.value;
-    setInputSite(event.target.value);
+    props.setInputSite(event.target.value);
     setFilteredQuary(quaryInfo.filter((site) => site.site == sitee));
   };
 
@@ -167,7 +167,7 @@ const BasicTable = React.forwardRef((props, ref) => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={inputSite}
+                    value={props.inputSite}
                     onChange={handleChange}
                   >
                     {quaryInfo.map((site) => (

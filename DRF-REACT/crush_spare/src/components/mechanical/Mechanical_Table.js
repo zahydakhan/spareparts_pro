@@ -109,10 +109,10 @@ const headCells = [
 function EnhancedTableHead(props) {
   const {
     classes,
-
+    onSelectAllClick,
     order,
     orderBy,
-
+    numSelected,
     rowCount,
     onRequestSort,
   } = props;
@@ -153,7 +153,7 @@ EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-
+  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -345,7 +345,7 @@ export default function EnhancedTable({ rows, cart, setCart }) {
                       </TableCell>
                       <TableCell className={classes.tableFont}>
                         {row.aud
-                          ? row.spare_parts[0].aud - row.aud
+                          ? (row.spare_parts[0].aud - row.aud).toFixed(2)
                           : row.spare_parts[0].aud -
                             (
                               parseFloat(row.usd) * parseFloat(audToUsd)

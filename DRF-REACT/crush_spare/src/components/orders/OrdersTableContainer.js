@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import SparepartsTable from "./SparepartsTable1";
-import SparepartsLoadingComponent from "./ui/SparepartsLoading";
-import axiosInstance from "../axios";
+import OrdersTable from "./OrdersTable";
+import SparepartsLoadingComponent from "../ui/SparepartsLoading";
+import axiosInstance from "../../axios";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
-import SpareIcon from "../assets/sparepart1.png";
+import SpareIcon from "../../assets/sparepart1.png";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -39,10 +39,10 @@ const useStyles = makeStyles((theme) => ({
 const rows = [];
 const columns = [];
 
-function LandingPage(props) {
+function OrderTableContainer(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const SpareLoading = SparepartsLoadingComponent(SparepartsTable);
+  const SpareLoading = SparepartsLoadingComponent(OrdersTable);
   const [appState, setAppState] = useState({
     loading: false,
     posts: null,
@@ -51,10 +51,10 @@ function LandingPage(props) {
   const [rows, setRows] = React.useState([]);
 
   useEffect(() => {
-    axiosInstance.get("/parts/spare/").then((res) => {
+    axiosInstance.get("/parts/orders/").then((res) => {
       console.log(res);
       setAppState({ loading: false, posts: res.data });
-      console.log(res.data);
+
       if (searchResult) {
         const filteredData = res.data.filter((cty) =>
           cty.part_number.toLowerCase().includes(searchResult.toLowerCase())
@@ -114,4 +114,4 @@ function LandingPage(props) {
     </React.Fragment>
   );
 }
-export default LandingPage;
+export default OrderTableContainer;

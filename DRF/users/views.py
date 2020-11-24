@@ -6,7 +6,7 @@ from .serializers import CustomUserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import NewUser
-from rest_framework import generics
+from rest_framework import viewsets, generics
 
 
 class CustomUserCreate(APIView):
@@ -53,3 +53,34 @@ class DeleteUser(generics.RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = NewUser.objects.all()
     serializer_class = CustomUserSerializer
+
+class UserViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    def list(self, request):
+        user = NewUser.objects.all()
+        serializer = CustomUserSerializer(user, many=True, context={"request":request})
+        response_dict = {"error": False, "message": "All Users", "data":serializer.data}
+        return Response(response_dict)
+
+    def create(self, request):
+        try:
+            serializer=CustomUserSerializer(data=request.data, context={"request": request})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            dict_response={"error": False, "message": "User saved successfully"}
+        except:
+            dict_response={'error': True, 'message':"User not saved"}
+        return Response(dict_response)
+
+    def update(self, request):
+        try:
+            queryset = NewUser.objects.all()
+            user=get_object_or_404(queryset, pk=pk)
+            serializer=CustomUserSerializer(user, data=request.data, context={"request": request})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            dict_response={"error": False, "message": "Successfully Updated User"}
+        except:
+            dict_response={'error': True, 'message':"Error During Updating User"}
+        return Response(dict_response)

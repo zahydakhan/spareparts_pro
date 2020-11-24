@@ -33,11 +33,21 @@ import DeleteRoller from "../components/admin-roller/delete-roller";
 import RollerUpload from "../components/uploads/roller-uploads";
 //import ExcelToJson from "../components/uploads/excelToJson";
 import Uploads from "./uploads/uploads";
+import Mechanical_Con from "./mechanical/Mechanical_container";
+import Get_Container from "./get/get_container";
+import OrderTableContainer from "./orders/OrdersTableContainer";
+import MonthlyPurchaseContainer from "./monthly-purchase/MonthlyPurchaseContainer";
+import MainOrderContainer from "./main-order/MainOrderContainer";
+import MainOrderPdf from "./main-order/main-order-pdf";
+//User imports
+import AdminUser from "./user-crud/UserAdmin";
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [value, setValue] = useState(0);
   const [cart, setCart] = useLocalStateCart("cart");
+  const [inputSite, setInputSite] = useState("Ormeau");
+  const [mainOrder, setMainOrder] = useLocalStateCart("mainOrder");
 
   return (
     <ThemeProvider theme={theme}>
@@ -63,30 +73,41 @@ function App() {
           />
           <Route
             exact
-            path="/pdf"
+            path="/spare_mp"
             render={() =>
               JSON.parse(window.localStorage.getItem("user")) ? (
-                <Example cart={cart} setCart={setCart} />
+                <Mechanical_Con cart={cart} setCart={setCart} />
               ) : (
                 <Redirect to="/login" />
               )
             }
           />
-
           <Route
             exact
-            path="/contact"
-            component={() => (
-              <div>
-                Contact Us
-                {[...new Array(45)]
-                  .map(
-                    () =>
-                      `Contact UsContact UsContact UsContact UsContact UsContact UsContact UsContact UsContact Us.`
-                  )
-                  .join("\n")}
-              </div>
-            )}
+            path="/spare_get"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Get_Container cart={cart} setCart={setCart} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/pdf"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <Example
+                  cart={cart}
+                  inputSite={inputSite}
+                  setInputSite={setInputSite}
+                  setCart={setCart}
+                />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
 
           <Route
@@ -268,6 +289,57 @@ function App() {
             render={() =>
               JSON.parse(window.localStorage.getItem("user")) ? (
                 <Uploads />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/orders"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <OrderTableContainer />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/monthly-purchase"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <MonthlyPurchaseContainer
+                  mainOrder={mainOrder}
+                  setMainOrder={setMainOrder}
+                />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/main-order"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <MainOrderPdf
+                  mainOrder={mainOrder}
+                  setMainOrder={setMainOrder}
+                />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+
+          <Route
+            exact
+            path="/admin-user"
+            render={() =>
+              JSON.parse(window.localStorage.getItem("user")) ? (
+                <AdminUser />
               ) : (
                 <Redirect to="/login" />
               )

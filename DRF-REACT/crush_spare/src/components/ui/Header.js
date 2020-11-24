@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/styles";
 import logo from "../../assets/boral-logo.png";
 
@@ -29,18 +28,11 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
-import { NavLink } from "react-router-dom";
-import Link1 from "@material-ui/core/Link";
-
 import { useLocalState } from "../../hooks";
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 import { connect } from "react-redux";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
-import SendIcon from "@material-ui/icons/Send";
 import { withStyles } from "@material-ui/core/styles";
 
 const StyledMenu = withStyles({
@@ -195,7 +187,6 @@ function Header(props) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down("md"));
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [openMenu, setOpenMenu] = useState(false);
 
   //for detecting ios devices
   const iOS = process.browser && /iPad|iPhone|iPad/;
@@ -230,67 +221,81 @@ function Header(props) {
     {
       name: "Edit Crushing Spare Parts",
       link: "/admin",
-      activeIndex: 1,
+      activeIndex: 0,
       selectedIndex: 0,
     },
     {
       name: " Edit Sites Data",
       link: "/admin-quary",
-      activeIndex: 1,
+      activeIndex: 0,
       selectedIndex: 1,
     },
     {
       name: " Edit Roller Spare Parts",
       link: "/admin-roller",
-      activeIndex: 1,
+      activeIndex: 0,
       selectedIndex: 2,
     },
     {
       name: " Upload Data",
       link: "/uploads",
-      activeIndex: 1,
+      activeIndex: 0,
       selectedIndex: 3,
     },
     {
       name: " Add New User",
       link: "/register",
-      activeIndex: 1,
+      activeIndex: 0,
       selectedIndex: 4,
     },
     {
       name: " Edit User",
       link: "/edit-user",
-      activeIndex: 1,
+      activeIndex: 0,
       selectedIndex: 5,
+    },
+    {
+      name: " Monthly Purchase Request",
+      link: "/monthly-purchase",
+      activeIndex: 0,
+      selectedIndex: 6,
+    },
+    {
+      name: " Main Order",
+      link: "/main-order",
+      activeIndex: 0,
+      selectedIndex: 7,
     },
   ];
   let routes = [];
   if (JSON.parse(window.localStorage.getItem("user"))) {
     if (JSON.parse(window.localStorage.getItem("user")).is_staff && loggedIn) {
       routes = [
-        { name: "Crushing Spare Parts", link: "/", activeIndex: 0 },
         {
           name: "Data Management",
-          activeIndex: 1,
+          activeIndex: 0,
           ariaOwns: anchorEl ? "simple-menu" : undefined,
           ariaPopup: anchorEl ? "true" : undefined,
           mouseOver: (event) => handleClick(event),
         },
-        { name: "Roller Spare Parts", link: "/roller", activeIndex: 2 },
-        { name: "Sites", link: "/sites", activeIndex: 3 },
-        { name: "Orders", link: "/orders", activeIndex: 4 },
-        { name: "Contact Us", link: "/contact", activeIndex: 5 },
+        { name: "Mangenese Liners", link: "/", activeIndex: 1 },
+        { name: "GET", link: "/spare_get", activeIndex: 2 },
+        { name: "Mechanical Parts", link: "/spare_mp", activeIndex: 3 },
+        { name: "Conveyor Rollers", link: "/roller", activeIndex: 4 },
+        { name: "Sites", link: "/sites", activeIndex: 5 },
+        { name: "Orders", link: "/orders", activeIndex: 6 },
       ];
     } else if (
       !JSON.parse(window.localStorage.getItem("user")).is_staff &&
       loggedIn
     ) {
       routes = [
-        { name: "Crushing Spare Parts", link: "/", activeIndex: 0 },
-        { name: "Roller Spare Parts", link: "/roller", activeIndex: 1 },
-        { name: "Sites", link: "/sites", activeIndex: 2 },
-        { name: "Orders", link: "/orders", activeIndex: 3 },
-        { name: "Contact Us", link: "/contact", activeIndex: 4 },
+        { name: "Mangenese Liners", link: "/", activeIndex: 0 },
+        { name: "GET", link: "/get", activeIndex: 1 },
+        { name: "Mechanical Parts", link: "/mechanical", activeIndex: 2 },
+        { name: "Conveyor Rollers", link: "/roller", activeIndex: 3 },
+        { name: "Sites", link: "/sites", activeIndex: 4 },
+        { name: "Orders", link: "/orders", activeIndex: 5 },
       ];
     } else {
       routes = [{ name: "Contact Us", link: "/contact", activeIndex: 5 }];
@@ -480,9 +485,6 @@ function Header(props) {
                     handleClose();
                   }}
                 >
-                  <ListItemIcon>
-                    <SendIcon fontSize="small" />
-                  </ListItemIcon>
                   <ListItemText primary={option.name} />
                 </StyledMenuItem>
               ))}

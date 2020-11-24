@@ -107,15 +107,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    classes,
-
-    order,
-    orderBy,
-
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -151,9 +143,7 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -345,9 +335,9 @@ export default function EnhancedTable({ rows, cart, setCart }) {
                       </TableCell>
                       <TableCell className={classes.tableFont}>
                         {row.aud
-                          ? row.spare_parts[0].aud - row.aud
-                          : row.spare_parts[0].aud -
-                            (
+                          ? (row.spare_parts[0].aud - row.aud).toFixed(2)
+                          : (
+                              row.spare_parts[0].aud -
                               parseFloat(row.usd) * parseFloat(audToUsd)
                             ).toFixed(2)}
                       </TableCell>

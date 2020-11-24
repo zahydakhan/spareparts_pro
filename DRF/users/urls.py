@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import CustomUserCreate, BlacklistTokenUpdateView, UserList, UserDetail, EditUser, DeleteUser
 from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework import routers
 
 app_name = 'users'
 

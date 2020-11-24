@@ -13,6 +13,10 @@ export default createMuiTheme({
       stickyHeader: {
         backgroundColor: "robGreen",
       },
+      root: {
+        padding: "5px",
+        fontSize: "0.675rem",
+      },
     },
   },
   palette: {

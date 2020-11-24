@@ -10,16 +10,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+
 import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
+
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FilterListIcon from "@material-ui/icons/FilterList";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import { useTheme } from "@material-ui/core/styles";
@@ -51,7 +46,6 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "id", numeric: false, disablePadding: false, label: "ID" },
   {
     id: "description",
     numeric: true,
@@ -102,6 +96,24 @@ const headCells = [
     label: "Vendor Name",
   },
   {
+    id: "price",
+    numeric: true,
+    disablePadding: false,
+    label: "Local Price",
+  },
+  {
+    id: "vendor_name",
+    numeric: true,
+    disablePadding: false,
+    label: "Vendor Name",
+  },
+  {
+    id: "savings",
+    numeric: true,
+    disablePadding: false,
+    label: "Savings",
+  },
+  {
     id: "add",
     numeric: true,
     disablePadding: false,
@@ -110,15 +122,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    classes,
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { classes, order, orderBy, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -154,9 +158,8 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
+
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -315,9 +318,6 @@ export default function EnhancedTable({ rows, cart, setCart }) {
                       selected={isItemSelected}
                     >
                       <TableCell className={classes.tableFont}>
-                        {row.id}
-                      </TableCell>
-                      <TableCell className={classes.tableFont}>
                         {row.description}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
@@ -348,6 +348,20 @@ export default function EnhancedTable({ rows, cart, setCart }) {
                       </TableCell>
                       <TableCell className={classes.tableFont}>
                         {row.vendor_name}
+                      </TableCell>
+                      <TableCell className={classes.tableFont}>
+                        {row.spare_parts[0].aud}
+                      </TableCell>
+                      <TableCell className={classes.tableFont}>
+                        {row.spare_parts[0].vendor_name}
+                      </TableCell>
+                      <TableCell className={classes.tableFont}>
+                        {row.aud
+                          ? (row.spare_parts[0].aud - row.aud).toFixed(2)
+                          : row.spare_parts[0].aud -
+                            (
+                              parseFloat(row.usd) * parseFloat(audToUsd)
+                            ).toFixed(2)}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
                         <div>

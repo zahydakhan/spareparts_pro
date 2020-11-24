@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,12 +10,15 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
+import axiosInstance from "../../axios";
+
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import { useTheme } from "@material-ui/core/styles";
+import { getCurrentDate } from "../utils";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -44,6 +48,12 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
+    id: "id",
+    numeric: true,
+    disablePadding: false,
+    label: "ID",
+  },
+  {
     id: "part_number",
     numeric: true,
     disablePadding: false,
@@ -62,57 +72,62 @@ const headCells = [
     label: "Vendor Name",
   },
   {
-    id: "aud",
+    id: "unit_price",
     numeric: true,
     disablePadding: false,
-    label: "Price AUD",
+    label: "Unit Price",
   },
   {
-    id: "weight_kg",
+    id: "quantity",
     numeric: true,
     disablePadding: false,
-    label: "Weight (kg)",
-  },
-  { id: "machine", numeric: true, disablePadding: false, label: "Machine" },
-  {
-    id: "model_number",
-    numeric: true,
-    disablePadding: false,
-    label: "Model Number",
+    label: "Quantity",
   },
   {
-    id: "price",
+    id: "total_price",
     numeric: true,
     disablePadding: false,
-    label: "Local Price",
+    label: "Total Price",
   },
   {
-    id: "vendor_name",
+    id: "pr_number",
     numeric: true,
     disablePadding: false,
-    label: "Vendor Name",
+    label: "Pr Number",
   },
   {
-    id: "savings",
+    id: "line_number",
     numeric: true,
     disablePadding: false,
-    label: "Savings",
+    label: "line Number",
+  },
+  {
+    id: "site_name",
+    numeric: true,
+    disablePadding: false,
+    label: "Site Name",
+  },
+  {
+    id: "date",
+    numeric: true,
+    disablePadding: false,
+    label: "Month",
   },
   {
     id: "add",
     numeric: true,
     disablePadding: false,
-    label: "Add to Order",
+    label: "Add to Main Order",
   },
 ];
 
 function EnhancedTableHead(props) {
   const {
     classes,
-
+    onSelectAllClick,
     order,
     orderBy,
-
+    numSelected,
     rowCount,
     onRequestSort,
   } = props;
@@ -153,7 +168,7 @@ EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-
+  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -225,7 +240,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable({ rows, cart, setCart }) {
+export default function EnhancedTable({ rows, mainOrder, setMainOrder }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -264,15 +279,25 @@ export default function EnhancedTable({ rows, cart, setCart }) {
 
   const handleSubmit = (row) => (event) => {
     event.preventDefault();
-    console.log(event.target[0].value);
+    console.log(row);
+    row.month = getCurrentDate();
+    setMainOrder([...mainOrder, row]);
 
-    console.log(row);
-    row.quantity = event.target[0].value;
-    setCart([...cart, row]);
-    console.log(row);
+    axiosInstance
+      .delete("/parts/admin-order/delete-order/" + row.id)
+      .catch(function (error) {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      })
+      .then(function () {
+        window.location.reload();
+      });
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  console.log(mainOrder);
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -299,18 +324,13 @@ export default function EnhancedTable({ rows, cart, setCart }) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                    >
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                      <TableCell className={classes.tableFont}>
+                        {row.id}
+                      </TableCell>
                       <TableCell className={classes.tableFont}>
                         {row.part_number}
                       </TableCell>
@@ -320,59 +340,35 @@ export default function EnhancedTable({ rows, cart, setCart }) {
                       <TableCell className={classes.tableFont}>
                         {row.vendor_name}
                       </TableCell>
-
                       <TableCell className={classes.tableFont}>
-                        {row.aud
-                          ? row.aud
-                          : (
-                              parseFloat(row.usd) * parseFloat(audToUsd)
-                            ).toFixed(2)}
+                        {row.unit_price}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.weight_kg}
+                        {row.quantity}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.machine}
+                        {row.total_price}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.model_number}
+                        {row.pr_number}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.spare_parts[0].aud}
+                        {row.line_number}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.spare_parts[0].vendor_name}
+                        {row.site_name}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        {row.aud
-                          ? row.spare_parts[0].aud - row.aud
-                          : row.spare_parts[0].aud -
-                            (
-                              parseFloat(row.usd) * parseFloat(audToUsd)
-                            ).toFixed(2)}
+                        {getCurrentDate()}
                       </TableCell>
                       <TableCell className={classes.tableFont}>
-                        <div>
-                          <form
-                            className={classes.form}
-                            onSubmit={handleSubmit(row)}
-                          >
-                            <input
-                              type="number"
-                              placeholder={addQuantity}
-                              onChange={(e) => setAddQuantity(e.target.value)}
-                              value={addQuantity}
-                              className={classes.input}
-                            />
-                            <Button
-                              type="submit"
-                              variant="outlined"
-                              className={classes.button}
-                            >
-                              Add
-                            </Button>
-                          </form>
-                        </div>
+                        <Button
+                          variant="outlined"
+                          className={classes.button}
+                          onClick={handleSubmit(row)}
+                        >
+                          Add
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );

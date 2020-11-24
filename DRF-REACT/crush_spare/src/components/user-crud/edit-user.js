@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axiosInstance from "../../axios";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 //MaterialUI
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -18,10 +17,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
@@ -31,9 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CreateQuary() {
+export default function EditRoller() {
   const history = useHistory();
+  const { id } = useParams();
   const initialFormData = Object.freeze({
+    id: "",
     title: "",
     slug: "",
     excerpt: "",
@@ -41,6 +38,20 @@ export default function CreateQuary() {
   });
 
   const [formData, updateFormData] = useState(initialFormData);
+
+  useEffect(() => {
+    axiosInstance.get("/user/edit/" + id).then((res) => {
+      updateFormData({
+        ...formData,
+        ["email"]: res.data.email,
+        ["user_name"]: res.data.roller_diameter,
+        ["first_name"]: res.data.wall_thickness,
+        ["start_date"]: res.data.roller_length,
+        ["about"]: res.data.shaft_diameter,
+      });
+      console.log(res.data);
+    });
+  }, [updateFormData]);
 
   const handleChange = (e) => {
     updateFormData({
@@ -52,33 +63,33 @@ export default function CreateQuary() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axiosInstance
-      .post(`/parts/admin-quary/create-quary/`, {
-        site: formData.site,
-        address: formData.address,
-        state: formData.state,
-        manager_name: formData.manager_name,
-        manager_email: formData.manager_email,
-        manager_phone: formData.manager_phone,
-        supervisor_name: formData.supervisor_name,
-        supervisor_email: formData.supervisor_email,
-        supervisor_phone: formData.supervisor_phone,
-      })
-      .then((res) => {
-        history.push("/admin-quary/");
-        console.log(res.data);
-      });
+    console.log(formData);
+
+    axiosInstance.put(`/roller/admin-roller/edit-roller/` + id + "/", {
+      description: formData.description,
+      roller_diameter: formData.roller_diameter,
+      wall_thickness: formData.wall_thickness,
+      roller_length: formData.roller_length,
+      shaft_diameter: formData.shaft_diameter,
+      bearing: formData.bearing,
+      aud: formData.aud,
+      usd: formData.usd,
+      vendor_name: formData.vendor_name,
+    });
+    history.push({
+      pathname: "/admin-roller/",
+    });
+    window.location.reload();
   };
 
   const classes = useStyles();
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="sm">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}></Avatar>
         <Typography component="h1" variant="h5">
-          Add New Quary
+          Edit Quary
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -87,10 +98,10 @@ export default function CreateQuary() {
                 variant="outlined"
                 required
                 fullWidth
-                id="site"
-                label="Site"
-                name="site"
-                autoComplete="site"
+                id="description"
+                name="description"
+                autoComplete="description"
+                value={formData.description}
                 onChange={handleChange}
               />
             </Grid>
@@ -99,13 +110,11 @@ export default function CreateQuary() {
                 variant="outlined"
                 required
                 fullWidth
-                id="address"
-                label="Address"
-                name="address"
-                autoComplete="address"
+                id="roller_diameter"
+                name="roller_diameter"
+                autoComplete="roller_diameter"
+                value={formData.roller_diameter}
                 onChange={handleChange}
-                multiline
-                rows={4}
               />
             </Grid>
             <Grid item xs={12}>
@@ -113,36 +122,22 @@ export default function CreateQuary() {
                 variant="outlined"
                 required
                 fullWidth
-                id="state"
-                label="state"
-                name="state"
-                autoComplete="state"
+                id="wall_thickness"
+                name="wall_thickness"
+                autoComplete="wall_thickness"
+                value={formData.wall_thickness}
                 onChange={handleChange}
               />
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="manager_name"
-                label="Manager Name"
-                name="manager_name"
-                autoComplete="manager_name"
-                onChange={handleChange}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="manager_email"
-                label="Manager Email"
-                name="manager_email"
-                autoComplete="manager_email"
+                id="roller_length"
+                name="roller_length"
+                autoComplete="roller_length"
+                value={formData.roller_length}
                 onChange={handleChange}
               />
             </Grid>
@@ -152,10 +147,10 @@ export default function CreateQuary() {
                 variant="outlined"
                 required
                 fullWidth
-                id="manager_phone"
-                label="Manager Phone"
-                name="manager_phone"
-                autoComplete="manager_phone"
+                id="shaft_diameter"
+                name="shaft_diameter"
+                autoComplete="shaft_diameter"
+                value={formData.shaft_diameter}
                 onChange={handleChange}
               />
             </Grid>
@@ -165,10 +160,10 @@ export default function CreateQuary() {
                 variant="outlined"
                 required
                 fullWidth
-                id="supervisor_name"
-                label="Supervisor Name"
-                name="supervisor_name"
-                autoComplete="supervisor_name"
+                id="bearing"
+                name="bearing"
+                autoComplete="bearing"
+                value={formData.bearing}
                 onChange={handleChange}
               />
             </Grid>
@@ -178,10 +173,23 @@ export default function CreateQuary() {
                 variant="outlined"
                 required
                 fullWidth
-                id="supervisor_email"
-                label="Supervisor Email"
-                name="supervisor_email"
-                autoComplete="supervisor_email"
+                id="aud"
+                name="aud"
+                autoComplete="aud"
+                value={formData.aud}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="usd"
+                name="usd"
+                autoComplete="usd"
+                value={formData.usd}
                 onChange={handleChange}
               />
             </Grid>
@@ -190,10 +198,10 @@ export default function CreateQuary() {
                 variant="outlined"
                 required
                 fullWidth
-                id="supervisor_phone"
-                label="Supervisor Phone"
-                name="supervisor_phone"
-                autoComplete="supervisor_phone"
+                id="vendor_name"
+                name="vendor_name"
+                autoComplete="vendor_name"
+                value={formData.vendor_name}
                 onChange={handleChange}
               />
             </Grid>
@@ -206,7 +214,7 @@ export default function CreateQuary() {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Add Quary
+            Update Roller
           </Button>
         </form>
       </div>

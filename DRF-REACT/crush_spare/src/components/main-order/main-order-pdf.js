@@ -1,35 +1,35 @@
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-import BasicTable from "./cart-page.component";
+import MainOrderContainer from "./MainOrderContainer";
 import Button from "@material-ui/core/Button";
 import axiosInstance from "../../axios";
 import { useHistory } from "react-router-dom";
 
-const Example = ({ cart, setCart, inputSite, setInputSite }) => {
+const MainOrderPdf = ({ mainOrder }) => {
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-  console.log(inputSite);
-  var pr_num = Math.floor(1000 + Math.random() * 90000000);
+  console.log(mainOrder);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    cart.forEach((crt, index) => {
+    mainOrder.forEach((order, index) => {
       axiosInstance
-        .post(`/parts/admin-order/create-order/`, {
-          part_number: crt.part_number,
-          description: crt.description,
-          vendor_name: crt.vendor_name,
-          unit_price: crt.aud,
-          quantity: crt.quantity,
-          total_price: crt.aud * crt.quantity,
-          pr_number: pr_num,
-          line_number: index + 1,
-          site_name: inputSite,
+        .post(`/parts/admin-mainorder/create-mainorder/`, {
+          part_number: order.part_number,
+          description: order.description,
+          vendor_name: order.vendor_name,
+          unit_price: order.unit_price,
+          quantity: order.quantity,
+          total_price: order.total_price,
+          pr_number: order.pr_number,
+          line_number: order.line_number,
+          site_name: order.site_name,
+          month: order.month,
         })
-        .then((res) => console.log(crt));
+        .then((res) => console.log("Success"));
     });
   };
 
@@ -53,15 +53,9 @@ const Example = ({ cart, setCart, inputSite, setInputSite }) => {
         Save Order
       </Button>
 
-      <BasicTable
-        cart={cart}
-        setCart={setCart}
-        inputSite={inputSite}
-        setInputSite={setInputSite}
-        ref={componentRef}
-      />
+      <MainOrderContainer mainOrder={mainOrder} ref={componentRef} />
     </div>
   );
 };
 
-export default Example;
+export default MainOrderPdf;

@@ -11,7 +11,6 @@ import TableRow from "@material-ui/core/TableRow";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
-import { useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,11 +27,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AllQuaries = (props) => {
-  const { quaries } = props;
+const Users = (props) => {
+  const { users } = props;
   const classes = useStyles();
-  if (!quaries || quaries.length === 0)
-    return <p>Can not find any posts, sorry</p>;
+  if (!users || users.length === 0) return <p>Can not find any posts, sorry</p>;
   return (
     <React.Fragment>
       <Paper className={classes.root}>
@@ -44,31 +42,19 @@ const AllQuaries = (props) => {
                   ID
                 </TableCell>
                 <TableCell className={classes.head_cell} align="left">
-                  Site
+                  Email
                 </TableCell>
                 <TableCell className={classes.head_cell} align="left">
-                  Address
+                  User Name
                 </TableCell>
                 <TableCell className={classes.head_cell} align="left">
-                  State
+                  First Name
                 </TableCell>
                 <TableCell className={classes.head_cell} align="left">
-                  Manager Name
+                  Start Date
                 </TableCell>
                 <TableCell className={classes.head_cell} align="left">
-                  Manager Email
-                </TableCell>
-                <TableCell className={classes.head_cell} align="left">
-                  Manager Phone
-                </TableCell>
-                <TableCell className={classes.head_cell} align="left">
-                  Supervisor Name
-                </TableCell>
-                <TableCell className={classes.head_cell} align="left">
-                  Supervisor Email
-                </TableCell>
-                <TableCell className={classes.head_cell} align="left">
-                  Supervisor Phone
+                  About
                 </TableCell>
                 <TableCell className={classes.head_cell} align="left">
                   Actions
@@ -76,33 +62,29 @@ const AllQuaries = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {quaries.map((spr) => {
+              {users.map((user) => {
                 return (
                   <TableRow>
                     <TableCell component="th" scope="row">
-                      {spr.id}
+                      {user.id}
                     </TableCell>
-                    <TableCell align="left">{spr.site}</TableCell>
-                    <TableCell align="left">{spr.address}</TableCell>
-                    <TableCell align="left">{spr.state}</TableCell>
-                    <TableCell align="left">{spr.manager_name}</TableCell>
-                    <TableCell align="left">{spr.manager_email}</TableCell>
-                    <TableCell align="left">{spr.manager_phone}</TableCell>
-                    <TableCell align="left">{spr.supervisor_name}</TableCell>
-                    <TableCell align="left">{spr.supervisor_email}</TableCell>
-                    <TableCell align="left">{spr.supervisor_phone}</TableCell>
+                    <TableCell align="left">{user.email}</TableCell>
+                    <TableCell align="left">{user.user_name}</TableCell>
+                    <TableCell align="left">{user.first_name}</TableCell>
+                    <TableCell align="left">{user.start_date}</TableCell>
+                    <TableCell align="left">{user.about}</TableCell>
 
                     <TableCell align="left">
                       <Link
                         color="textPrimary"
-                        href={"/admin-quary/edit-quary/" + spr.id}
+                        href={"/user/edit/" + user.id}
                         className={classes.link}
                       >
                         <EditIcon></EditIcon>
                       </Link>
                       <Link
                         color="textPrimary"
-                        href={"/admin-quary/delete-quary/" + spr.id}
+                        href={"/user/delete/" + user.id}
                         className={classes.link}
                       >
                         <DeleteForeverIcon></DeleteForeverIcon>
@@ -114,11 +96,11 @@ const AllQuaries = (props) => {
               <TableRow>
                 <TableCell colSpan={4} align="right">
                   <Button
-                    href={"/admin-quary/create-quary"}
+                    href={"/register"}
                     variant="contained"
                     color="primary"
                   >
-                    Add New Site
+                    Add New User
                   </Button>
                 </TableCell>
               </TableRow>
@@ -129,4 +111,4 @@ const AllQuaries = (props) => {
     </React.Fragment>
   );
 };
-export default AllQuaries;
+export default Users;

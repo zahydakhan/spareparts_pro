@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import SparepartsTable from "./SparepartsTable1";
-import SparepartsLoadingComponent from "./ui/SparepartsLoading";
-import axiosInstance from "../axios";
+import Users from "./users";
+import SparepartsLoading from "../ui/SparepartsLoading";
+import axiosInstance from "../../axios";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
-import SpareIcon from "../assets/sparepart1.png";
+import SpareIcon from "../../assets/sparepart1.png";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   search: {
     height: "3em",
     fontSize: "1.2em",
-    paddingLeft: "2em",
+    width: "13em",
   },
   title: {
     fontFamily: "Merriweather",
@@ -36,36 +36,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const rows = [];
-const columns = [];
-
-function LandingPage(props) {
-  const classes = useStyles();
-  const theme = useTheme();
-  const SpareLoading = SparepartsLoadingComponent(SparepartsTable);
+function AdminUser() {
+  const SpareLoading = SparepartsLoading(Users);
   const [appState, setAppState] = useState({
-    loading: false,
-    posts: null,
+    loading: true,
+    users: null,
   });
+  const classes = useStyles();
+
   const [searchResult, setSearchResult] = React.useState("");
-  const [rows, setRows] = React.useState([]);
 
   useEffect(() => {
-    axiosInstance.get("/parts/spare/").then((res) => {
-      console.log(res);
-      setAppState({ loading: false, posts: res.data });
-      console.log(res.data);
+    axiosInstance.get(`/user/`).then((res) => {
+      const data = res.data;
+      console.log(data);
+
       if (searchResult) {
-        const filteredData = res.data.filter((cty) =>
-          cty.part_number.toLowerCase().includes(searchResult.toLowerCase())
+        const filteredData = data.filter((user) =>
+          user.user_name.toLowerCase().includes(searchResult.toLowerCase())
         );
         console.log(filteredData);
-        setRows(filteredData);
+        setAppState({ loading: false, users: filteredData });
       } else {
-        setRows(res.data);
+        setAppState({ loading: false, users: data });
       }
     });
   }, [setAppState, searchResult]);
+
   return (
     <React.Fragment>
       <Container
@@ -90,28 +87,21 @@ function LandingPage(props) {
           </Grid>
           <Grid item>
             <Typography variant="h3" className={classes.title}>
-              Crushing Spare Parts
+              Edit Roller Spare Parts
             </Typography>
           </Grid>
         </Grid>
 
         <input
           type="Search"
-          placeholder="Search Spareparts"
+          placeholder="Search Roller Spare Parts"
           onChange={(e) => setSearchResult(e.target.value)}
           className={classes.search}
         />
 
-        <SpareLoading
-          cart={props.cart}
-          setCart={props.setCart}
-          columns={columns}
-          rows={rows}
-          isLoading={appState.loading}
-          posts={appState.posts}
-        />
+        <SpareLoading isLoading={appState.loading} users={appState.users} />
       </Container>
     </React.Fragment>
   );
 }
-export default LandingPage;
+export default AdminUser;
