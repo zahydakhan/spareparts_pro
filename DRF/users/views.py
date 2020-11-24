@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomUserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import NewUser
 from rest_framework import generics
 
@@ -41,5 +41,15 @@ class UserList(generics.ListAPIView):
 
 
 class UserDetail(generics.RetrieveAPIView):
+    queryset = NewUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class EditUser(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = NewUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class DeleteUser(generics.RetrieveDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = NewUser.objects.all()
     serializer_class = CustomUserSerializer

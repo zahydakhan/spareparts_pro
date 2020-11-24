@@ -38,3 +38,4 @@ class DeleteRoller(generics.RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Roller.objects.all()
     serializer_class = RollerSerializer
+
